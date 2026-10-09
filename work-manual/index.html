@@ -1,8 +1,8 @@
-<title>法務工作導覽</title>
+<title>法務守備位置</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Noto+Serif+TC:wght@600;700&amp;display=swap">
 <style id="app-style">
-/* Layout: sticky top bar with search; left index of chapters (chips on phone); right column of expandable procedure cards. */
+/* Layout: sticky top bar with search; hero lede + four "fielding position" menu cards; sub-tabs per chapter; column of expandable procedure cards. */
 :root{
   --paper:#f6f7f9; --sheet:#ffffff; --ink:#1c2230; --muted:#5d6577; --line:#dfe3ea;
   --accent:#27477a; --accent-soft:#e7edf7; --seal:#b23a2e; --seal-soft:#f8e9e6;
@@ -27,7 +27,8 @@ button{cursor:pointer}
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--sheet);border-bottom:1px solid var(--line)}
 .top-in{max-width:1180px;margin:0 auto;padding:12px 16px;display:flex;gap:12px 16px;align-items:center;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:10px;min-width:0}
-.seal{width:34px;height:34px;flex:none;border:2px solid var(--seal);color:var(--seal);border-radius:6px;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:15px;line-height:1;transform:rotate(-4deg)}
+.seal{width:28px;height:28px;margin:4px;flex:none;border:2px solid var(--seal);color:var(--seal);border-radius:3px;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:14px;line-height:1;transform:rotate(45deg)}
+.seal span{transform:rotate(-45deg)}
 .brand h1{font-family:var(--f-display);font-size:19px;margin:0;letter-spacing:.04em;text-wrap:balance}
 .brand small{display:block;color:var(--muted);font-size:12px;letter-spacing:.02em}
 .search{flex:1 1 260px;min-width:0;position:relative}
@@ -40,19 +41,34 @@ button{cursor:pointer}
 .btn.small{padding:3px 9px;font-size:13px}
 .btn.on{background:var(--seal-soft);border-color:var(--seal);color:var(--seal);font-weight:500}
 .btn[disabled]{opacity:.5;cursor:not-allowed}
-.shell{max-width:1180px;margin:0 auto;padding-block:20px 120px;padding-inline:16px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:28px}
-nav.idx{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);align-self:start;display:flex;flex-direction:column;gap:2px}
-.idx-label{font-size:12px;letter-spacing:.12em;color:var(--muted);margin:0 0 6px 10px}
-.idx button.cat{all:unset;cursor:pointer;display:flex;justify-content:space-between;gap:8px;padding:8px 10px;border-radius:8px;font-size:15px}
-.idx button.cat:hover{background:var(--accent-soft)}
-.idx button.cat[aria-current="true"]{background:var(--accent-soft);color:var(--accent);font-weight:700}
-.idx button.cat:focus-visible{outline:2px solid var(--accent)}
-.idx .n{color:var(--muted);font-variant-numeric:tabular-nums;font-size:13px;font-weight:400}
-.idx hr{border:0;border-top:1px solid var(--line);margin:10px 0}
+.shell{max-width:1100px;margin:0 auto;padding-block:22px 120px;padding-inline:16px;display:flex;flex-direction:column;gap:22px}
+.hero{display:grid;gap:14px}
+.eyebrow{font-size:12px;letter-spacing:.16em;color:var(--seal);font-weight:700;margin:0}
+.lede{margin:0;font-size:17px;max-width:65ch}
+.menu{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.pos{all:unset;box-sizing:border-box;cursor:pointer;background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-content:start;min-width:0}
+.pos:hover{border-color:var(--accent)}
+.pos:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pos[aria-current="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:var(--accent-soft)}
+.pos .code{grid-row:span 3;width:44px;height:44px;border-radius:8px;background:var(--accent);color:var(--sheet);display:grid;place-items:center;font-weight:700;font-size:14px;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.pos .pname{font-family:var(--f-display);font-weight:700;font-size:18px;letter-spacing:.06em;line-height:1.3}
+.pos .plain{font-size:13px;color:var(--muted);line-height:1.5}
+.pos .pcount{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.pos.add{border-style:dashed;color:var(--muted);grid-template-columns:minmax(0,1fr);place-items:center}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;border-bottom:1px solid var(--line)}
+.tab{all:unset;cursor:pointer;flex:none;padding:8px 14px;font-size:15px;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--muted)}
+.tab:hover{color:var(--ink)}
+.tab:focus-visible{outline:2px solid var(--accent)}
+.tab[aria-current="true"]{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
+.tab .n{font-size:12px;margin-left:4px;font-variant-numeric:tabular-nums}
+.foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:12px}
+.linkbtn{all:unset;cursor:pointer;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.linkbtn:focus-visible{outline:2px solid var(--accent)}
 main{min-width:0;display:flex;flex-direction:column;gap:14px}
 .banner{background:var(--warn-bg);color:var(--warn-fg);border-radius:var(--r);padding:10px 14px;font-size:14px}
 .cat-head h2{font-family:var(--f-display);font-size:26px;margin:0;letter-spacing:.03em;text-wrap:balance}
 .cat-head p{margin:4px 0 0;color:var(--muted);max-width:65ch}
+.cat-desc{margin:0;color:var(--muted);font-size:14px}
 .cat-edit{display:grid;gap:8px;background:var(--sheet);border:1px dashed var(--seal);border-radius:var(--r);padding:14px}
 .list{display:flex;flex-direction:column;gap:10px}
 .item{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r)}
@@ -80,7 +96,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
 .empty{background:var(--sheet);border:1px dashed var(--line);border-radius:var(--r);padding:24px;color:var(--muted);text-align:center}
 .form{display:grid;gap:10px}
 .form label{display:grid;gap:4px;font-size:13px;color:var(--muted)}
-.form input[type=text],.form textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--paper);color:var(--ink);font-size:15px}
+.form input[type=text],.form textarea,.form select{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--paper);color:var(--ink);font-size:15px}
 .form textarea{min-height:90px;resize:vertical;line-height:1.6}
 .form .hint{font-size:12px;color:var(--muted)}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
@@ -98,10 +114,12 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
 .savebar .msg:empty{display:none}
 .toast{font-size:13px;color:var(--ok)}
 @media (max-width:760px){
-  .shell{grid-template-columns:minmax(0,1fr);gap:16px;padding-block:12px 140px}
-  nav.idx{position:static;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:4px}
-  .idx-label,.idx hr{display:none}
-  .idx button.cat{flex:none;border:1px solid var(--line);background:var(--sheet);padding:5px 12px;border-radius:999px;font-size:14px}
+  .shell{gap:16px;padding-block:14px 140px}
+  .menu{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .pos{grid-template-columns:minmax(0,1fr);padding:12px}
+  .pos .code{grid-row:auto;width:36px;height:36px;font-size:13px}
+  .pos .pname{font-size:16px}
+  .lede{font-size:15px}
   .item-head{grid-template-columns:minmax(0,1fr)}
   .chips{justify-content:flex-start}
   .log div{grid-template-columns:minmax(0,1fr);gap:0}
@@ -111,41 +129,464 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
 <div id="app"></div>
 <script type="application/json" id="manual-data">
 {
- "meta": {"updated": "2026-10-09"},
- "categories": [
-  {"id": "board", "name": "董事會", "desc": "董事會召集、開會與會後作業。", "items": [
-   {"id": "board-1", "title": "召集與會前準備", "summary": "排定議程、彙整議案資料，於期限前寄發開會通知。", "timing": "開會 7 日前寄發召集通知（有緊急情事時得隨時召集）", "owner": "", "steps": ["確認年度董事會行事曆及本次預定議案", "通知各提案單位提交議案及附件，訂定收件截止日", "應先經審計委員會（或其他功能性委員會）審議的議案，先排入委員會", "彙整議程、議事手冊，陳核董事長", "於期限內寄發開會通知及會議資料予全體董事", "確認會場、視訊連線及錄音錄影設備"], "notes": ["依《公開發行公司董事會議事辦法》，召集事由應載明；特定重大事項應在召集事由中列舉，不得以臨時動議提出", "董事認為資料不足時得請求補足，送件時程要預留補件時間"], "refs": [{"label": "全國法規資料庫", "url": "https://law.moj.gov.tw/"}], "updated": "2026-10-09", "draft": true},
-   {"id": "board-2", "title": "會議當日", "summary": "簽到、確認出席、利害關係迴避及全程錄音錄影。", "timing": "", "owner": "", "steps": ["董事簽到，確認出席人數達法定門檻", "主席宣布開會，確認是否有董事應利益迴避", "依議程逐案報告、討論、表決", "記錄決議結果，以及董事的反對或保留意見", "全程錄音或錄影"], "notes": ["會議錄音錄影資料至少保存 5 年，得以電子方式保存"], "refs": [], "updated": "2026-10-09", "draft": true},
-   {"id": "board-3", "title": "會後作業", "summary": "議事錄分送、決議追蹤、重大訊息公告與歸檔。", "timing": "會後 20 日內將議事錄分送各董事", "owner": "", "steps": ["整理議事錄，經主席及記錄人員簽名或蓋章", "會後 20 日內分送各董事", "通知各權責單位執行決議事項並追蹤", "應公告的重大訊息於期限內申報（見「資訊公開」）", "須報主管機關核准或備查的事項，辦理函報", "議事錄、簽到簿、錄音錄影檔歸檔"], "notes": ["議事錄及簽到簿列為公司重要檔案，於公司存續期間妥善保存"], "refs": [], "updated": "2026-10-09", "draft": true}
-  ]},
-  {"id": "agm", "name": "股東會", "desc": "股東常會、臨時會的籌備與會後作業。", "items": [
-   {"id": "agm-1", "title": "籌備時程", "summary": "董事會決議召集、停止過戶、寄發開會通知。", "timing": "常會於每會計年度終了後 6 個月內召開", "owner": "", "steps": ["董事會決議股東會日期、地點、議程", "辦理停止過戶公告", "（公開發行公司）公告受理股東提案及董事候選人提名", "寄發開會通知：公開發行公司常會 30 日前、臨時會 15 日前；非公開發行公司常會 20 日前、臨時會 10 日前", "製作議事手冊及相關會議資料", "安排會場、報到、計票及錄音錄影"], "notes": ["本公司是否為公開發行公司，會影響各項期限，請依實際情況刪改"], "refs": [], "updated": "2026-10-09", "draft": true},
-   {"id": "agm-2", "title": "會議當日", "summary": "報到、出席股數統計、表決與計票。", "timing": "", "owner": "", "steps": ["股東報到，核對出席證或委託書", "統計出席股數，確認達法定出席門檻", "主席宣布開會，依議程進行", "表決及計票，當場宣布結果", "全程錄音或錄影"], "notes": ["錄音錄影的保存期限依本公司股東會議事規則辦理"], "refs": [], "updated": "2026-10-09", "draft": true},
-   {"id": "agm-3", "title": "會後作業", "summary": "議事錄分發、變更登記與函報。", "timing": "會後 20 日內分發議事錄", "owner": "", "steps": ["製作議事錄，經主席簽名或蓋章", "會後 20 日內分發各股東（公開發行公司得以公告方式）", "修正章程、改選董事等事項，辦理公司變更登記", "需函報主管機關的事項辦理函報", "會議資料歸檔"], "notes": [], "refs": [], "updated": "2026-10-09", "draft": true}
-  ]},
-  {"id": "disclosure", "name": "資訊公開", "desc": "向保險局、公司網站（企網）及保險安定基金辦理的資訊公開與申報。", "items": [
-   {"id": "dis-1", "title": "保險局申報", "summary": "應向主管機關申報或函報的事項。", "timing": "請填入各申報事項的期限", "owner": "", "steps": ["確認本次應申報的事項及期限", "向權責單位取得資料並核對", "陳核主管後，以公文或申報系統送出", "留存送件紀錄及回執"], "notes": ["請把本公司適用的申報事項清單補在這裡"], "refs": [], "updated": "2026-10-09", "draft": true},
-   {"id": "dis-2", "title": "企網（公司網站）資訊公開", "summary": "依《保險業辦理資訊公開管理辦法》在公司網站揭露的資訊。", "timing": "資訊有變動時，於規定期限內更新", "owner": "", "steps": ["確認應揭露項目與資料來源單位", "取得更新內容並核對", "陳核後交由網站管理單位上架", "上架後檢查頁面內容與日期正確", "留存更新紀錄"], "notes": ["「企網」所指範圍請確認後修改"], "refs": [], "updated": "2026-10-09", "draft": true},
-   {"id": "dis-3", "title": "安定基金（保險業公開資訊觀測站）", "summary": "於保險安定基金建置的公開資訊觀測站申報。", "timing": "請填入各申報事項的期限", "owner": "", "steps": ["確認申報項目及期限", "準備申報資料並核對", "陳核後登入系統申報", "確認申報成功並截圖存檔"], "notes": [], "refs": [], "updated": "2026-10-09", "draft": true}
-  ]},
-  {"id": "contract", "name": "合約審閱用印及管理", "desc": "合約從審閱、用印到歸檔與到期管理。", "items": [
-   {"id": "con-1", "title": "合約審閱", "summary": "承辦單位送審，法務審閱並回覆修改意見。", "timing": "", "owner": "", "steps": ["承辦單位提出審閱申請，附合約草稿、交易背景及相對人資料", "判斷是否屬重大合約（依公司標準）", "法務審閱：主體、標的、價金、期間、違約責任、保密、個資、準據法與管轄", "提出修改意見，與承辦單位或相對人協商", "確認定稿版本並註記審閱完成"], "notes": ["重大合約的判斷標準請填入"], "refs": [], "updated": "2026-10-09", "draft": true},
-   {"id": "con-2", "title": "合約用印", "summary": "用印申請、核對定稿版本、登記用印。", "timing": "", "owner": "", "steps": ["承辦單位填寫用印申請單，經權責主管核准", "核對送印版本與審閱定稿一致", "用印（含騎縫章），並登記用印登記簿", "雙方簽署完成後取回正本"], "notes": ["印信保管及用印規定見「印信」"], "refs": [], "updated": "2026-10-09", "draft": true},
-   {"id": "con-3", "title": "歸檔與到期管理", "summary": "正本歸檔、登錄合約管理表、到期提醒。", "timing": "", "owner": "", "steps": ["合約正本編號歸檔，並留存電子檔", "登錄合約管理表：相對人、期間、金額、到期日、是否自動續約、承辦人", "到期前通知承辦單位評估續約或終止", "辦理續約、變更或終止，並更新管理表"], "notes": [], "refs": [], "updated": "2026-10-09", "draft": true}
-  ]},
-  {"id": "seal", "name": "印信", "desc": "印信的保管、申領、廢止。", "items": [
-   {"id": "seal-1", "title": "保管", "summary": "印信種類、保管人與保管方式。", "timing": "", "owner": "", "steps": ["列出公司各類印信（公司章、負責人章、合約專用章等）及保管人", "印信存放於上鎖處所，鑰匙由專人保管", "保管人異動時辦理交接並留存紀錄"], "notes": [], "refs": [], "updated": "2026-10-09", "draft": true},
-   {"id": "seal-2", "title": "申請與登記", "summary": "憑核准的申請單，逐筆登記。", "timing": "", "owner": "", "steps": ["確認用印申請單已經權責主管核准", "核對文件內容與申請事由相符", "用印並登記用印登記簿（日期、文件、申請人、印信種類、份數）", "申請單與登記簿依序歸檔"], "notes": [], "refs": [], "updated": "2026-10-09", "draft": true},
-   {"id": "seal-3", "title": "攜出", "summary": "印信攜出須申請並登記借還時間。", "timing": "", "owner": "", "steps": ["提出攜出申請並經核准", "登記攜出時間、用途及攜出人", "歸還時登記並確認印信完好"], "notes": [], "refs": [], "updated": "2026-10-09", "draft": true},
-   {"id": "seal-4", "title": "刻製、變更與廢止", "summary": "新刻、變更或廢止印信的程序。", "timing": "", "owner": "", "steps": ["提出申請並經核准", "刻製或變更後建立印鑑卡或留存印模", "廢止的印信辦理銷毀並留存紀錄"], "notes": [], "refs": [], "updated": "2026-10-09", "draft": true}
-  ]},
-  {"id": "audit", "name": "查核", "desc": "印信、重大合約與非重大合約的定期查核。", "items": [
-   {"id": "aud-1", "title": "印信查核", "summary": "核對用印紀錄、盤點印信與攜出紀錄。", "timing": "請填入查核頻率", "owner": "", "steps": ["抽查期間內用印登記簿", "核對每筆用印都有核准的申請單", "實地盤點印信及保管處所", "檢查攜出紀錄是否完整歸還", "撰寫查核報告，追蹤缺失改善"], "notes": [], "refs": [], "updated": "2026-10-09", "draft": true},
-   {"id": "aud-2", "title": "重大合約查核", "summary": "檢查重大合約的審閱、核准、歸檔與履約管理。", "timing": "請填入查核頻率", "owner": "", "steps": ["確認重大合約清單完整", "逐件檢查是否經法務審閱及權責核准", "確認正本已歸檔、管理表資料正確", "檢查到期及續約管理", "撰寫查核報告，追蹤缺失改善"], "notes": ["重大合約的金額門檻請填入"], "refs": [], "updated": "2026-10-09", "draft": true},
-   {"id": "aud-3", "title": "非重大合約查核", "summary": "以抽樣方式檢查一般合約。", "timing": "請填入查核頻率", "owner": "", "steps": ["依抽樣比例抽選合約", "檢查審閱、核准、用印紀錄", "確認歸檔及管理表登錄", "撰寫查核報告，追蹤缺失改善"], "notes": ["抽樣比例請填入"], "refs": [], "updated": "2026-10-09", "draft": true}
-  ]}
+ "meta": {
+  "updated": "2026-10-09"
+ },
+ "groups": [
+  {
+   "id": "g-if",
+   "code": "IF",
+   "name": "決策內野",
+   "desc": "公司重大決策的召集、開會，以及對主管機關與大眾的資訊公開。",
+   "plain": "董事會 / 股東會 / 資訊公開（保局、企網、安定基金）"
+  },
+  {
+   "id": "g-dh",
+   "code": "DH",
+   "name": "指定打擊",
+   "desc": "替各單位上場處理合約：從審閱、用印到歸檔與到期管理。",
+   "plain": "合約審閱、用印與管理"
+  },
+  {
+   "id": "g-mk",
+   "code": "印",
+   "name": "守備印記",
+   "desc": "公司印信的保管、申領、攜出與廢止。",
+   "plain": "印信管理（申領、作廢）"
+  },
+  {
+   "id": "g-ump",
+   "code": "UMP",
+   "name": "主審查核",
+   "desc": "定期查核印信，以及重大、非重大合約的執行情形。",
+   "plain": "印信與各類合約（重大／非重大）定期查核"
+  }
  ],
- "log": [{"date": "2026-10-09", "text": "更新手冊內容"}, {"date": "2026-10-09", "text": "更新手冊內容"}, {"date": "2026-10-09", "text": "建立初版（各流程內容為範例草稿）"}]
+ "categories": [
+  {
+   "id": "board",
+   "name": "董事會",
+   "desc": "董事會召集、開會與會後作業。",
+   "items": [
+    {
+     "id": "board-1",
+     "title": "召集與會前準備",
+     "summary": "排定議程、彙整議案資料，於期限前寄發開會通知。",
+     "timing": "開會 7 日前寄發召集通知（有緊急情事時得隨時召集）",
+     "owner": "",
+     "steps": [
+      "確認年度董事會行事曆及本次預定議案",
+      "通知各提案單位提交議案及附件，訂定收件截止日",
+      "應先經審計委員會（或其他功能性委員會）審議的議案，先排入委員會",
+      "彙整議程、議事手冊，陳核董事長",
+      "於期限內寄發開會通知及會議資料予全體董事",
+      "確認會場、視訊連線及錄音錄影設備"
+     ],
+     "notes": [
+      "依《公開發行公司董事會議事辦法》，召集事由應載明；特定重大事項應在召集事由中列舉，不得以臨時動議提出",
+      "董事認為資料不足時得請求補足，送件時程要預留補件時間"
+     ],
+     "refs": [
+      {
+       "label": "全國法規資料庫",
+       "url": "https://law.moj.gov.tw/"
+      }
+     ],
+     "updated": "2026-10-09",
+     "draft": true
+    },
+    {
+     "id": "board-2",
+     "title": "會議當日",
+     "summary": "簽到、確認出席、利害關係迴避及全程錄音錄影。",
+     "timing": "",
+     "owner": "",
+     "steps": [
+      "董事簽到，確認出席人數達法定門檻",
+      "主席宣布開會，確認是否有董事應利益迴避",
+      "依議程逐案報告、討論、表決",
+      "記錄決議結果，以及董事的反對或保留意見",
+      "全程錄音或錄影"
+     ],
+     "notes": [
+      "會議錄音錄影資料至少保存 5 年，得以電子方式保存"
+     ],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    },
+    {
+     "id": "board-3",
+     "title": "會後作業",
+     "summary": "議事錄分送、決議追蹤、重大訊息公告與歸檔。",
+     "timing": "會後 20 日內將議事錄分送各董事",
+     "owner": "",
+     "steps": [
+      "整理議事錄，經主席及記錄人員簽名或蓋章",
+      "會後 20 日內分送各董事",
+      "通知各權責單位執行決議事項並追蹤",
+      "應公告的重大訊息於期限內申報（見「資訊公開」）",
+      "須報主管機關核准或備查的事項，辦理函報",
+      "議事錄、簽到簿、錄音錄影檔歸檔"
+     ],
+     "notes": [
+      "議事錄及簽到簿列為公司重要檔案，於公司存續期間妥善保存"
+     ],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    }
+   ],
+   "group": "g-if"
+  },
+  {
+   "id": "agm",
+   "name": "股東會",
+   "desc": "股東常會、臨時會的籌備與會後作業。",
+   "items": [
+    {
+     "id": "agm-1",
+     "title": "籌備時程",
+     "summary": "董事會決議召集、停止過戶、寄發開會通知。",
+     "timing": "常會於每會計年度終了後 6 個月內召開",
+     "owner": "",
+     "steps": [
+      "董事會決議股東會日期、地點、議程",
+      "辦理停止過戶公告",
+      "（公開發行公司）公告受理股東提案及董事候選人提名",
+      "寄發開會通知：公開發行公司常會 30 日前、臨時會 15 日前；非公開發行公司常會 20 日前、臨時會 10 日前",
+      "製作議事手冊及相關會議資料",
+      "安排會場、報到、計票及錄音錄影"
+     ],
+     "notes": [
+      "本公司是否為公開發行公司，會影響各項期限，請依實際情況刪改"
+     ],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    },
+    {
+     "id": "agm-2",
+     "title": "會議當日",
+     "summary": "報到、出席股數統計、表決與計票。",
+     "timing": "",
+     "owner": "",
+     "steps": [
+      "股東報到，核對出席證或委託書",
+      "統計出席股數，確認達法定出席門檻",
+      "主席宣布開會，依議程進行",
+      "表決及計票，當場宣布結果",
+      "全程錄音或錄影"
+     ],
+     "notes": [
+      "錄音錄影的保存期限依本公司股東會議事規則辦理"
+     ],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    },
+    {
+     "id": "agm-3",
+     "title": "會後作業",
+     "summary": "議事錄分發、變更登記與函報。",
+     "timing": "會後 20 日內分發議事錄",
+     "owner": "",
+     "steps": [
+      "製作議事錄，經主席簽名或蓋章",
+      "會後 20 日內分發各股東（公開發行公司得以公告方式）",
+      "修正章程、改選董事等事項，辦理公司變更登記",
+      "需函報主管機關的事項辦理函報",
+      "會議資料歸檔"
+     ],
+     "notes": [],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    }
+   ],
+   "group": "g-if"
+  },
+  {
+   "id": "disclosure",
+   "name": "資訊公開",
+   "desc": "向保險局、公司網站（企網）及保險安定基金辦理的資訊公開與申報。",
+   "items": [
+    {
+     "id": "dis-1",
+     "title": "保險局申報",
+     "summary": "應向主管機關申報或函報的事項。",
+     "timing": "請填入各申報事項的期限",
+     "owner": "",
+     "steps": [
+      "確認本次應申報的事項及期限",
+      "向權責單位取得資料並核對",
+      "陳核主管後，以公文或申報系統送出",
+      "留存送件紀錄及回執"
+     ],
+     "notes": [
+      "請把本公司適用的申報事項清單補在這裡"
+     ],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    },
+    {
+     "id": "dis-2",
+     "title": "企網（公司網站）資訊公開",
+     "summary": "依《保險業辦理資訊公開管理辦法》在公司網站揭露的資訊。",
+     "timing": "資訊有變動時，於規定期限內更新",
+     "owner": "",
+     "steps": [
+      "確認應揭露項目與資料來源單位",
+      "取得更新內容並核對",
+      "陳核後交由網站管理單位上架",
+      "上架後檢查頁面內容與日期正確",
+      "留存更新紀錄"
+     ],
+     "notes": [
+      "「企網」所指範圍請確認後修改"
+     ],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    },
+    {
+     "id": "dis-3",
+     "title": "安定基金（保險業公開資訊觀測站）",
+     "summary": "於保險安定基金建置的公開資訊觀測站申報。",
+     "timing": "請填入各申報事項的期限",
+     "owner": "",
+     "steps": [
+      "確認申報項目及期限",
+      "準備申報資料並核對",
+      "陳核後登入系統申報",
+      "確認申報成功並截圖存檔"
+     ],
+     "notes": [],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    }
+   ],
+   "group": "g-if"
+  },
+  {
+   "id": "contract",
+   "name": "合約審閱用印及管理",
+   "desc": "合約從審閱、用印到歸檔與到期管理。",
+   "items": [
+    {
+     "id": "con-1",
+     "title": "合約審閱",
+     "summary": "承辦單位送審，法務審閱並回覆修改意見。",
+     "timing": "",
+     "owner": "",
+     "steps": [
+      "承辦單位提出審閱申請，附合約草稿、交易背景及相對人資料",
+      "判斷是否屬重大合約（依公司標準）",
+      "法務審閱：主體、標的、價金、期間、違約責任、保密、個資、準據法與管轄",
+      "提出修改意見，與承辦單位或相對人協商",
+      "確認定稿版本並註記審閱完成"
+     ],
+     "notes": [
+      "重大合約的判斷標準請填入"
+     ],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    },
+    {
+     "id": "con-2",
+     "title": "合約用印",
+     "summary": "用印申請、核對定稿版本、登記用印。",
+     "timing": "",
+     "owner": "",
+     "steps": [
+      "承辦單位填寫用印申請單，經權責主管核准",
+      "核對送印版本與審閱定稿一致",
+      "用印（含騎縫章），並登記用印登記簿",
+      "雙方簽署完成後取回正本"
+     ],
+     "notes": [
+      "印信保管及用印規定見「印信」"
+     ],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    },
+    {
+     "id": "con-3",
+     "title": "歸檔與到期管理",
+     "summary": "正本歸檔、登錄合約管理表、到期提醒。",
+     "timing": "",
+     "owner": "",
+     "steps": [
+      "合約正本編號歸檔，並留存電子檔",
+      "登錄合約管理表：相對人、期間、金額、到期日、是否自動續約、承辦人",
+      "到期前通知承辦單位評估續約或終止",
+      "辦理續約、變更或終止，並更新管理表"
+     ],
+     "notes": [],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    }
+   ],
+   "group": "g-dh"
+  },
+  {
+   "id": "seal",
+   "name": "印信",
+   "desc": "印信的保管、申領、廢止。",
+   "items": [
+    {
+     "id": "seal-1",
+     "title": "保管",
+     "summary": "印信種類、保管人與保管方式。",
+     "timing": "",
+     "owner": "",
+     "steps": [
+      "列出公司各類印信（公司章、負責人章、合約專用章等）及保管人",
+      "印信存放於上鎖處所，鑰匙由專人保管",
+      "保管人異動時辦理交接並留存紀錄"
+     ],
+     "notes": [],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    },
+    {
+     "id": "seal-2",
+     "title": "申請與登記",
+     "summary": "憑核准的申請單，逐筆登記。",
+     "timing": "",
+     "owner": "",
+     "steps": [
+      "確認用印申請單已經權責主管核准",
+      "核對文件內容與申請事由相符",
+      "用印並登記用印登記簿（日期、文件、申請人、印信種類、份數）",
+      "申請單與登記簿依序歸檔"
+     ],
+     "notes": [],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    },
+    {
+     "id": "seal-3",
+     "title": "攜出",
+     "summary": "印信攜出須申請並登記借還時間。",
+     "timing": "",
+     "owner": "",
+     "steps": [
+      "提出攜出申請並經核准",
+      "登記攜出時間、用途及攜出人",
+      "歸還時登記並確認印信完好"
+     ],
+     "notes": [],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    },
+    {
+     "id": "seal-4",
+     "title": "刻製、變更與廢止",
+     "summary": "新刻、變更或廢止印信的程序。",
+     "timing": "",
+     "owner": "",
+     "steps": [
+      "提出申請並經核准",
+      "刻製或變更後建立印鑑卡或留存印模",
+      "廢止的印信辦理銷毀並留存紀錄"
+     ],
+     "notes": [],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    }
+   ],
+   "group": "g-mk"
+  },
+  {
+   "id": "audit",
+   "name": "查核",
+   "desc": "印信、重大合約與非重大合約的定期查核。",
+   "items": [
+    {
+     "id": "aud-1",
+     "title": "印信查核",
+     "summary": "核對用印紀錄、盤點印信與攜出紀錄。",
+     "timing": "請填入查核頻率",
+     "owner": "",
+     "steps": [
+      "抽查期間內用印登記簿",
+      "核對每筆用印都有核准的申請單",
+      "實地盤點印信及保管處所",
+      "檢查攜出紀錄是否完整歸還",
+      "撰寫查核報告，追蹤缺失改善"
+     ],
+     "notes": [],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    },
+    {
+     "id": "aud-2",
+     "title": "重大合約查核",
+     "summary": "檢查重大合約的審閱、核准、歸檔與履約管理。",
+     "timing": "請填入查核頻率",
+     "owner": "",
+     "steps": [
+      "確認重大合約清單完整",
+      "逐件檢查是否經法務審閱及權責核准",
+      "確認正本已歸檔、管理表資料正確",
+      "檢查到期及續約管理",
+      "撰寫查核報告，追蹤缺失改善"
+     ],
+     "notes": [
+      "重大合約的金額門檻請填入"
+     ],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    },
+    {
+     "id": "aud-3",
+     "title": "非重大合約查核",
+     "summary": "以抽樣方式檢查一般合約。",
+     "timing": "請填入查核頻率",
+     "owner": "",
+     "steps": [
+      "依抽樣比例抽選合約",
+      "檢查審閱、核准、用印紀錄",
+      "確認歸檔及管理表登錄",
+      "撰寫查核報告，追蹤缺失改善"
+     ],
+     "notes": [
+      "抽樣比例請填入"
+     ],
+     "refs": [],
+     "updated": "2026-10-09",
+     "draft": true
+    }
+   ],
+   "group": "g-ump"
+  }
+ ],
+ "log": [
+  {
+   "date": "2026-10-09",
+   "text": "更新手冊內容"
+  },
+  {
+   "date": "2026-10-09",
+   "text": "更新手冊內容"
+  },
+  {
+   "date": "2026-10-09",
+   "text": "建立初版（各流程內容為範例草稿）"
+  }
+ ]
 }
 </script>
 <script id="app-script">
@@ -157,8 +598,10 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   var ui = { view: "cat", cat: null, open: {}, q: "", edit: false, dirty: false, confirm: null, readOnly: false, saving: false, msg: "", note: "" };
   var artifactApi = null;
 
+  if (!state.groups) state.groups = [];
   try { var c = localStorage.getItem("wm-cat"); if (c) ui.cat = c; } catch (e) {}
   if (!findCat(ui.cat)) ui.cat = state.categories[0] ? state.categories[0].id : null;
+  syncGroup();
 
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
   function today() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
@@ -170,6 +613,10 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     return t.replace(new RegExp(eq, "gi"), function (m) { return "<mark>" + m + "</mark>"; });
   }
   function findCat(id) { return state.categories.filter(function (c) { return c.id === id; })[0] || null; }
+  function findGroup(id) { return state.groups.filter(function (g) { return g.id === id; })[0] || null; }
+  function groupOf(c) { return (c && findGroup(c.group)) || state.groups[0] || null; }
+  function catsIn(gid) { return state.categories.filter(function (c) { var g = groupOf(c); return g && g.id === gid; }); }
+  function syncGroup() { var g = groupOf(findCat(ui.cat)); ui.group = g ? g.id : null; }
   function findItem(id) {
     for (var i = 0; i < state.categories.length; i++) {
       var items = state.categories[i].items;
@@ -184,13 +631,14 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   function shell() {
     document.getElementById("app").innerHTML =
       '<header class="top"><div class="top-in">' +
-      '<div class="brand"><div class="seal" aria-hidden="true">法</div><div><h1>法務工作導覽</h1><small id="upd"></small></div></div>' +
+      '<div class="brand"><div class="seal" aria-hidden="true"><span>法</span></div><div><h1>法務守備位置</h1><small id="upd"></small></div></div>' +
       '<div class="search">' + SEARCH_ICON + '<input id="q" type="search" placeholder="搜尋流程、步驟、注意事項…" aria-label="搜尋法務工作內容"></div>' +
       '<button class="btn" id="edit-toggle" type="button"></button>' +
       '</div></header>' +
-      '<div class="shell"><nav class="idx" id="nav" aria-label="章節"></nav><main id="main"></main></div>' +
+      '<div class="shell"><section class="hero"><p class="eyebrow">全功能戰術菜單</p><p class="lede">點選下方守備位置，一秒查閱法務的所有工作項目。</p>' +
+      '<nav class="menu" id="menu" aria-label="守備位置"></nav></section><main id="main"></main><footer class="foot" id="foot"></footer></div>' +
       '<div class="savebar" id="savebar" hidden></div>';
-    document.getElementById("q").addEventListener("input", function (e) { ui.q = e.target.value; renderMain(); });
+    document.getElementById("q").addEventListener("input", function (e) { ui.q = e.target.value; renderMenu(); renderMain(); });
     document.getElementById("edit-toggle").addEventListener("click", function () {
       if (ui.edit && ui.dirty) { ui.msg = "還有未儲存的修改，請先儲存或捨棄。"; renderSavebar(); return; }
       ui.edit = !ui.edit; ui.confirm = null; render();
@@ -200,25 +648,31 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     document.getElementById("app").addEventListener("change", onInput);
   }
 
-  function render() { renderTop(); renderNav(); renderMain(); renderSavebar(); }
+  function render() { renderTop(); renderMenu(); renderMain(); renderFoot(); renderSavebar(); }
 
   function renderTop() {
-    document.getElementById("upd").textContent = "認識法務部門的工作與流程 · 最後更新 " + (state.meta.updated || "");
+    document.getElementById("upd").textContent = "認識法務部門的工作 · 最後更新 " + (state.meta.updated || "");
     var b = document.getElementById("edit-toggle");
     b.textContent = ui.edit ? "結束編輯" : "編輯模式";
     b.className = "btn" + (ui.edit ? " on" : "");
     b.hidden = ui.readOnly && !ui.edit;
   }
 
-  function renderNav() {
-    var h = '<p class="idx-label">章節</p>';
-    state.categories.forEach(function (c) {
-      var cur = ui.view === "cat" && ui.cat === c.id && !ui.q.trim();
-      h += '<button type="button" class="cat" data-act="cat" data-id="' + esc(c.id) + '" aria-current="' + cur + '"><span>' + esc(c.name) + '</span><span class="n">' + c.items.length + '</span></button>';
-    });
-    if (ui.edit) h += '<button type="button" class="cat" data-act="add-cat"><span>＋ 新增章節</span></button>';
-    h += '<hr><button type="button" class="cat" data-act="log" aria-current="' + (ui.view === "log") + '"><span>變更紀錄</span><span class="n">' + state.log.length + '</span></button>';
-    document.getElementById("nav").innerHTML = h;
+  function renderMenu() {
+    var cur = ui.view === "cat" && !ui.q.trim() ? ui.group : null;
+    document.getElementById("menu").innerHTML = state.groups.map(function (g) {
+      var cats = catsIn(g.id);
+      var n = cats.reduce(function (a, c) { return a + c.items.length; }, 0);
+      return '<button type="button" class="pos" data-act="group" data-id="' + esc(g.id) + '" aria-current="' + (cur === g.id) + '">' +
+        '<span class="code" aria-hidden="true">' + esc(g.code) + '</span><span class="pname">【' + esc(g.name) + '】</span>' +
+        '<span class="plain">' + esc(g.plain || cats.map(function (c) { return c.name; }).join(" / ") || "尚無章節") + '</span>' +
+        '<span class="pcount">' + n + ' 個流程</span></button>';
+    }).join("");
+  }
+
+  function renderFoot() {
+    document.getElementById("foot").innerHTML = '<span>內容由法務部門維護，流程有異動時隨時更新。</span>' +
+      '<button type="button" class="linkbtn" data-act="log">變更紀錄（' + state.log.length + '）</button>';
   }
 
   function hasDraft() { return state.categories.some(function (c) { return c.items.some(function (i) { return i.draft; }); }); }
@@ -241,23 +695,46 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       h += '<div class="cat-head"><h2>變更紀錄</h2><p>每次儲存都會記下日期與修改說明。</p></div>';
       h += '<div class="log">' + (state.log.map(function (l) { return "<div><time>" + esc(l.date) + "</time><span>" + esc(l.text) + "</span></div>"; }).join("") || "<div><span>尚無紀錄</span></div>") + "</div>";
     } else {
-      var c = findCat(ui.cat);
-      if (!c) { h += '<div class="empty">還沒有任何章節。' + (ui.edit ? "請從左側新增章節。" : "") + "</div>"; }
+      var g = findGroup(ui.group);
+      if (!g) { h += '<div class="empty">還沒有任何守備位置。</div>'; }
       else {
+        var cats = catsIn(g.id);
+        var c = findCat(ui.cat);
+        if (!c || groupOf(c) !== g) { c = cats[0] || null; ui.cat = c ? c.id : null; }
         if (ui.edit) {
-          h += '<div class="cat-edit form"><label>章節名稱<input type="text" id="cat-name-' + esc(c.id) + '" data-cfield="name" data-id="' + esc(c.id) + '" value="' + esc(c.name) + '"></label>' +
-            '<label>章節說明<input type="text" id="cat-desc-' + esc(c.id) + '" data-cfield="desc" data-id="' + esc(c.id) + '" value="' + esc(c.desc) + '"></label>' +
-            '<div class="row"><button type="button" class="btn small" data-act="cat-up" data-id="' + esc(c.id) + '">章節上移</button><button type="button" class="btn small" data-act="cat-down" data-id="' + esc(c.id) + '">章節下移</button>' +
-            (ui.confirm === "cat:" + c.id
-              ? '<span class="confirm">刪除「' + esc(c.name) + '」及其 ' + c.items.length + ' 個流程？</span><button type="button" class="btn small danger" data-act="cat-del" data-id="' + esc(c.id) + '">確定刪除</button><button type="button" class="btn small" data-act="cancel">取消</button>'
-              : '<button type="button" class="btn small danger" data-act="ask" data-key="cat:' + esc(c.id) + '">刪除章節</button>') +
-            "</div></div>";
+          h += '<div class="cat-edit form"><p class="sec-label">守備位置</p>' +
+            '<div class="row"><label style="flex:2 1 160px">名稱<input type="text" id="g-name-' + esc(g.id) + '" data-gfield="name" data-id="' + esc(g.id) + '" value="' + esc(g.name) + '"></label>' +
+            '<label style="flex:1 1 80px">代號<input type="text" id="g-code-' + esc(g.id) + '" data-gfield="code" data-id="' + esc(g.id) + '" value="' + esc(g.code) + '" maxlength="4"></label></div>' +
+            '<label>選單小字<input type="text" id="g-plain-' + esc(g.id) + '" data-gfield="plain" data-id="' + esc(g.id) + '" value="' + esc(g.plain) + '"><span class="hint">顯示在上方選單卡片上；留白則自動列出章節名稱</span></label>' +
+            '<label>說明<input type="text" id="g-desc-' + esc(g.id) + '" data-gfield="desc" data-id="' + esc(g.id) + '" value="' + esc(g.desc) + '"></label></div>';
         } else {
-          h += '<div class="cat-head"><h2>' + esc(c.name) + "</h2>" + (c.desc ? "<p>" + esc(c.desc) + "</p>" : "") + "</div>";
+          h += '<div class="cat-head"><h2>【' + esc(g.name) + '】</h2>' + (g.desc ? "<p>" + esc(g.desc) + "</p>" : "") + "</div>";
         }
-        h += '<div class="list">' + c.items.map(function (it) { return itemHtml(it, c, false); }).join("") + "</div>";
-        if (!c.items.length) h += '<div class="empty">這個章節還沒有流程。' + (ui.edit ? "" : "進入編輯模式即可新增。") + "</div>";
-        if (ui.edit) h += '<div class="row"><button type="button" class="btn" data-act="add-item" data-id="' + esc(c.id) + '">＋ 新增流程</button></div>';
+        if (cats.length > 1 || ui.edit) {
+          h += '<div class="tabs" role="tablist">' + cats.map(function (x) {
+            return '<button type="button" class="tab" data-act="cat" data-id="' + esc(x.id) + '" aria-current="' + (c === x) + '">' + esc(x.name) + '<span class="n">' + x.items.length + "</span></button>";
+          }).join("") + (ui.edit ? '<button type="button" class="tab" data-act="add-cat">＋ 新增章節</button>' : "") + "</div>";
+        }
+        if (!c) { h += '<div class="empty">這個守備位置還沒有章節。' + (ui.edit ? "按「＋ 新增章節」開始。" : "") + "</div>"; }
+        else {
+          if (ui.edit) {
+            h += '<div class="cat-edit form"><p class="sec-label">章節</p><label>章節名稱<input type="text" id="cat-name-' + esc(c.id) + '" data-cfield="name" data-id="' + esc(c.id) + '" value="' + esc(c.name) + '"></label>' +
+              '<label>章節說明<input type="text" id="cat-desc-' + esc(c.id) + '" data-cfield="desc" data-id="' + esc(c.id) + '" value="' + esc(c.desc) + '"></label>' +
+              '<label>所屬守備位置<select id="cat-group-' + esc(c.id) + '" data-cfield="group" data-id="' + esc(c.id) + '">' + state.groups.map(function (x) {
+                return '<option value="' + esc(x.id) + '"' + (x === g ? " selected" : "") + ">" + esc(x.name) + "</option>";
+              }).join("") + "</select></label>" +
+              '<div class="row"><button type="button" class="btn small" data-act="cat-up" data-id="' + esc(c.id) + '">章節上移</button><button type="button" class="btn small" data-act="cat-down" data-id="' + esc(c.id) + '">章節下移</button>' +
+              (ui.confirm === "cat:" + c.id
+                ? '<span class="confirm">刪除「' + esc(c.name) + '」及其 ' + c.items.length + ' 個流程？</span><button type="button" class="btn small danger" data-act="cat-del" data-id="' + esc(c.id) + '">確定刪除</button><button type="button" class="btn small" data-act="cancel">取消</button>'
+                : '<button type="button" class="btn small danger" data-act="ask" data-key="cat:' + esc(c.id) + '">刪除章節</button>') +
+              "</div></div>";
+          } else if (cats.length > 1 && c.desc) {
+            h += '<p class="cat-desc">' + esc(c.desc) + "</p>";
+          }
+          h += '<div class="list">' + c.items.map(function (it) { return itemHtml(it, c, false); }).join("") + "</div>";
+          if (!c.items.length) h += '<div class="empty">這個章節還沒有流程。</div>';
+          if (ui.edit) h += '<div class="row"><button type="button" class="btn" data-act="add-item" data-id="' + esc(c.id) + '">＋ 新增流程</button></div>';
+        }
       }
     }
     m.innerHTML = h;
@@ -266,7 +743,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   function itemHtml(it, c, showCat) {
     var open = !!ui.open[it.id] || (ui.q.trim() && ui.open[it.id] !== false);
     var chips = "";
-    if (showCat) chips += '<span class="chip where">' + esc(c.name) + "</span>";
+    if (showCat) { var gg = groupOf(c); chips += '<span class="chip where">' + (gg ? esc(gg.name) + " · " : "") + esc(c.name) + "</span>"; }
     if (it.draft) chips += '<span class="chip draft">待確認</span>';
     var h = '<article class="item' + (open ? " open" : "") + '">' +
       '<button type="button" class="item-head" data-act="toggle" data-id="' + esc(it.id) + '" aria-expanded="' + open + '">' +
@@ -328,10 +805,17 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   function onInput(e) {
     var t = e.target;
     if (t.id === "save-note") { ui.note = t.value; return; }
+    if (t.dataset.gfield) {
+      var g = findGroup(t.dataset.id); if (!g) return;
+      g[t.dataset.gfield] = t.value; markDirty(); renderMenu();
+      return;
+    }
     if (t.dataset.cfield) {
       var c = findCat(t.dataset.id); if (!c) return;
+      if (c[t.dataset.cfield] === t.value) return;
       c[t.dataset.cfield] = t.value; markDirty();
-      if (t.dataset.cfield === "name") renderNav();
+      if (t.dataset.cfield === "group") { ui.cat = c.id; syncGroup(); render(); }
+      else if (t.dataset.cfield === "name") { renderMenu(); }
       return;
     }
     if (!t.dataset.field) return;
@@ -355,8 +839,13 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     var b = e.target.closest("[data-act]"); if (!b) return;
     var act = b.dataset.act, id = b.dataset.id, f, c, i;
     switch (act) {
+      case "group":
+        c = catsIn(id)[0];
+        ui.view = "cat"; ui.group = id; ui.cat = c ? c.id : null; ui.q = ""; document.getElementById("q").value = "";
+        try { if (c) localStorage.setItem("wm-cat", c.id); } catch (er) {}
+        break;
       case "cat":
-        ui.view = "cat"; ui.cat = id; ui.q = ""; document.getElementById("q").value = "";
+        ui.view = "cat"; ui.cat = id; syncGroup(); ui.q = ""; document.getElementById("q").value = "";
         try { localStorage.setItem("wm-cat", id); } catch (er) {}
         break;
       case "log": ui.view = "log"; ui.q = ""; document.getElementById("q").value = ""; break;
@@ -366,14 +855,14 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
         renderMain(); return;
       }
       case "add-cat":
-        c = { id: uid(), name: "新章節", desc: "", items: [] };
+        c = { id: uid(), name: "新章節", desc: "", group: ui.group, items: [] };
         state.categories.push(c); ui.cat = c.id; ui.view = "cat"; markDirty(); break;
       case "cat-up": case "cat-down":
         i = state.categories.indexOf(findCat(id));
         if (move(state.categories, i, act === "cat-up" ? -1 : 1)) markDirty(); break;
       case "cat-del":
         state.categories = state.categories.filter(function (x) { return x.id !== id; });
-        ui.cat = state.categories[0] ? state.categories[0].id : null; ui.confirm = null; markDirty(); break;
+        ui.cat = null; ui.confirm = null; markDirty(); break;
       case "add-item":
         c = findCat(id);
         var it = { id: uid(), title: "", summary: "", timing: "", owner: "", steps: [], notes: [], refs: [], updated: today(), draft: false };
@@ -390,6 +879,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       case "discard":
         state = clone(saved); ui.dirty = false; ui.note = ""; ui.msg = ""; ui.confirm = null;
         if (!findCat(ui.cat)) ui.cat = state.categories[0] ? state.categories[0].id : null;
+        syncGroup();
         break;
       case "save": save(); return;
       default: return;
@@ -404,7 +894,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     var json = JSON.stringify(data, null, 1).replace(/</g, "\\u003c");
     var fonts = Array.prototype.map.call(document.querySelectorAll('link[href*="fonts.googleapis"],link[rel="preconnect"]'), function (l) { return l.outerHTML; }).join("\n");
     return "<!doctype html><html><head><meta charset=utf8><meta name=viewport content=\"width=device-width,initial-scale=1,viewport-fit=cover\"><style>" + RESET + "</style></head><body>" +
-      "<title>法務工作導覽</title>\n" + fonts + "\n" +
+      "<title>法務守備位置</title>\n" + fonts + "\n" +
       document.getElementById("app-style").outerHTML + "\n" +
       '<div id="app"></div>\n' +
       '<script type="application/json" id="manual-data">\n' + json + "\n" + SC + "\n" +
