@@ -103,10 +103,6 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
 .row.end{justify-content:flex-end}
 .check{display:flex!important;grid-template-columns:none;align-items:center;gap:6px;flex-direction:row}
 .confirm{background:var(--seal-soft);color:var(--seal);border-radius:8px;padding:8px 10px;font-size:14px}
-.log{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:6px 16px}
-.log div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
-.log div:last-child{border-bottom:0}
-.log time{color:var(--muted);font-variant-numeric:tabular-nums}
 .savebar{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--sheet);border-top:2px solid var(--seal);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px))}
 .savebar .in{max-width:1180px;margin:0 auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .savebar input{flex:1 1 220px;min-width:0;border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:var(--paper)}
@@ -122,7 +118,6 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   .lede{font-size:15px}
   .item-head{grid-template-columns:minmax(0,1fr)}
   .chips{justify-content:flex-start}
-  .log div{grid-template-columns:minmax(0,1fr);gap:0}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -159,20 +154,20 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   {
    "id": "inbound",
    "name": "收文",
-   "desc": "郵件、快遞、公文送達後的處理。",
+   "desc": "郵件、快遞、公文取得後的處理。",
    "group": "g-doc",
    "items": [
     {
      "id": "in-1",
      "title": "簽收來文",
-     "summary": "郵差或快遞送達時，核對收件人與件數後簽收。",
+     "summary": "領取紙本文件時，核對收件人與件數後簽收。",
      "timing": "送達當下處理",
      "owner": "",
      "steps": [
-      "核對信封上的收件人（公司名稱、部門）是否為本公司",
-      "清點件數，掛號、快遞件與送件人的清單逐件核對",
-      "在送件人的簽收單上簽名（或蓋收發章），寫上日期",
-      "非本公司的錯投郵件當場退回，不要簽收"
+      "核對信封上的收件人（公司名稱）是否為本公司",
+      "清點件數，掛號、快遞件與送件人的清單逐件核對，簽收單上簽名",
+      "拆信後蓋部門收發章，並掃描公文",
+      "公文掃描下載後須命名"
      ],
      "notes": [
       "寫明「親啟」或指定個人的信件不拆封，直接轉交收件人",
@@ -451,12 +446,6 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     }
    ]
   }
- ],
- "log": [
-  {
-   "date": "2026-10-09",
-   "text": "建立初版（各流程內容為範例草稿）"
-  }
  ]
 }
 </script>
@@ -470,7 +459,6 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   var artifactApi = null;
   // Opened as a plain .html file (shared drive, intranet, email) rather than inside Claude.
   var STANDALONE = !(window.claude && window.claude.use);
-  function canEditHere() { return !STANDALONE || location.hash === "#edit"; }
 
   if (!state.groups) state.groups = [];
   try { var c = localStorage.getItem("am-cat"); if (c) ui.cat = c; } catch (e) {}
@@ -529,7 +517,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     var b = document.getElementById("edit-toggle");
     b.textContent = ui.edit ? "結束編輯" : "編輯模式";
     b.className = "btn" + (ui.edit ? " on" : "");
-    b.hidden = (ui.readOnly || !canEditHere()) && !ui.edit;
+    b.hidden = ui.readOnly && !ui.edit;
   }
 
   function renderMenu() {
@@ -546,7 +534,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
 
   function renderFoot() {
     document.getElementById("foot").innerHTML = '<span>內容由行政承辦同仁維護，流程有異動時隨時更新。</span>' +
-      '<button type="button" class="linkbtn" data-act="log">變更紀錄（' + state.log.length + '）</button>';
+      '';
   }
 
   function hasDraft() { return state.categories.some(function (c) { return c.items.some(function (i) { return i.draft; }); }); }
@@ -565,9 +553,6 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       });
       h += '<div class="cat-head"><h2>搜尋結果</h2><p>「' + esc(ui.q.trim()) + '」共 ' + hits.length + ' 筆</p></div>';
       h += hits.length ? '<div class="list">' + hits.map(function (x) { return itemHtml(x.it, x.c, true); }).join("") + "</div>" : '<div class="empty">找不到符合的內容，換個關鍵字試試。</div>';
-    } else if (ui.view === "log") {
-      h += '<div class="cat-head"><h2>變更紀錄</h2><p>每次儲存都會記下日期與修改說明。</p></div>';
-      h += '<div class="log">' + (state.log.map(function (l) { return "<div><time>" + esc(l.date) + "</time><span>" + esc(l.text) + "</span></div>"; }).join("") || "<div><span>尚無紀錄</span></div>") + "</div>";
     } else {
       var g = findGroup(ui.group);
       if (!g) { h += '<div class="empty">還沒有任何工作項目。</div>'; }
@@ -667,7 +652,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     if (bar.hidden) return;
     var hadFocus = document.activeElement && document.activeElement.id === "save-note";
     bar.innerHTML = '<div class="in">' +
-      (ui.dirty ? '<strong>有未儲存的修改</strong><input id="save-note" type="text" placeholder="修改說明（例如：更新用印登記方式）" value="' + esc(ui.note) + '">' +
+      (ui.dirty ? '<strong>有未儲存的修改</strong>' +
         '<button type="button" class="btn" data-act="discard"' + (ui.saving ? " disabled" : "") + '>捨棄</button>' +
         '<button type="button" class="btn primary" data-act="save"' + (ui.saving || ui.readOnly ? " disabled" : "") + ">" + (ui.saving ? "儲存中…" : STANDALONE ? "下載更新後的檔案" : "儲存並發布") + "</button>" : "") +
       '<span class="msg">' + esc(ui.msg) + "</span></div>";
@@ -722,7 +707,6 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
         ui.view = "cat"; ui.cat = id; syncGroup(); ui.q = ""; document.getElementById("q").value = "";
         try { localStorage.setItem("am-cat", id); } catch (er) {}
         break;
-      case "log": ui.view = "log"; ui.q = ""; document.getElementById("q").value = ""; break;
       case "toggle": {
         var isOpen = !!ui.open[id] || (ui.q.trim() && ui.open[id] !== false);
         ui.open[id] = !isOpen; ui.confirm = null;
@@ -792,7 +776,6 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     if (STANDALONE) {
       var nx = clone(state);
       nx.meta.updated = today();
-      nx.log.unshift({ date: today(), text: ui.note.trim() || "更新內容" });
       downloadDocument(nx); return;
     }
     if (!artifactApi) {
@@ -805,7 +788,6 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     }
     var next = clone(state);
     next.meta.updated = today();
-    next.log.unshift({ date: today(), text: ui.note.trim() || "更新內容" });
     ui.saving = true; ui.msg = ""; renderSavebar();
     artifactApi.publish(buildDocument(next)).then(function () {
       ui.saving = false; ui.dirty = false; saved = next; state = clone(next); ui.note = "";
