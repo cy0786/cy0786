@@ -455,7 +455,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   var DATA_EL = document.getElementById("manual-data");
   var saved = JSON.parse(DATA_EL.textContent);
   var state = clone(saved);
-  var ui = { view: "cat", cat: null, open: {}, q: "", edit: false, dirty: false, confirm: null, readOnly: false, saving: false, msg: "", note: "" };
+  var ui = { admin: false, view: "cat", cat: null, open: {}, q: "", edit: false, dirty: false, confirm: null, readOnly: false, saving: false, msg: "", note: "" };
   var artifactApi = null;
   // Opened as a plain .html file (shared drive, intranet, email) rather than inside Claude.
   var STANDALONE = !(window.claude && window.claude.use);
@@ -515,9 +515,10 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   function renderTop() {
     document.getElementById("upd").textContent = "行政新人操作手冊 · 最後更新 " + (state.meta.updated || "");
     var b = document.getElementById("edit-toggle");
-    b.textContent = ui.edit ? "結束編輯" : "編輯模式";
+    // Back office: only people the platform says can publish (owner, or Editors added via Share) see it.
+    b.textContent = ui.edit ? "離開後台" : "後台管理";
     b.className = "btn" + (ui.edit ? " on" : "");
-    b.hidden = ui.readOnly && !ui.edit;
+    b.hidden = !ui.admin && !ui.edit;
   }
 
   function renderMenu() {
@@ -542,7 +543,8 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   function renderMain() {
     var m = document.getElementById("main"); var h = "";
     var q = ui.q.trim().toLowerCase();
-    if (hasDraft() && !q && ui.view === "cat") h += '<div class="banner">標示「待確認」的流程是範例草稿，請進入編輯模式改成實際做法，改完取消勾選「待確認」。</div>';
+    if (ui.edit) h += '<div class="banner">後台管理模式：修改後按下方「儲存並發布」，所有人看到的內容才會更新。</div>';
+    else if (ui.admin && hasDraft() && !q && ui.view === "cat") h += '<div class="banner">標示「待確認」的流程是範例草稿，請到後台改成實際做法，改完取消勾選「待確認」。（這段提示與「待確認」標籤只有管理者看得到）</div>';
     if (q) {
       var hits = [];
       state.categories.forEach(function (c) {
@@ -603,7 +605,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     var open = !!ui.open[it.id] || (ui.q.trim() && ui.open[it.id] !== false);
     var chips = "";
     if (showCat) { var gg = groupOf(c); chips += '<span class="chip where">' + (gg ? esc(gg.name) + " · " : "") + esc(c.name) + "</span>"; }
-    if (it.draft) chips += '<span class="chip draft">待確認</span>';
+    if (it.draft && ui.admin) chips += '<span class="chip draft">待確認</span>';
     var h = '<article class="item' + (open ? " open" : "") + '">' +
       '<button type="button" class="item-head" data-act="toggle" data-id="' + esc(it.id) + '" aria-expanded="' + open + '">' +
       '<span class="item-title">' + hl(it.title || "（未命名流程）") + "</span>" +
@@ -796,7 +798,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       ui.saving = false;
       var code = err && err.code;
       if (code === "conflict") ui.msg = "有人先儲存了較新的版本，頁面將重新載入。";
-      else if (["not_writer", "not_granted", "not_declared", "consent_required", "capability_disabled", "capability_removed"].indexOf(code) >= 0) { ui.readOnly = true; ui.msg = "你只有檢視權限，無法儲存修改。"; }
+      else if (["not_writer", "not_granted", "not_declared", "consent_required", "capability_disabled", "capability_removed"].indexOf(code) >= 0) { ui.readOnly = true; ui.msg = "你沒有後台管理權限，無法儲存修改。"; }
       else if (code === "rate_limited") ui.msg = "儲存太頻繁，請稍候再試。";
       else if (code === "too_large") ui.msg = "內容太大，無法儲存。";
       else ui.msg = "儲存失敗，請稍後再試。";
@@ -810,10 +812,10 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   shell(); render();
 
   if (window.claude && window.claude.use) {
-    window.claude.use("artifact").then(function (a) { artifactApi = a; if (!a) { ui.readOnly = true; renderTop(); } });
+    window.claude.use("artifact").then(function (a) { artifactApi = a; });
     window.claude.use("user").then(function (u) {
       if (u && typeof u.canEdit === "function") {
-        Promise.resolve(u.canEdit()).then(function (ok) { if (ok === false) { ui.readOnly = true; renderTop(); } });
+        Promise.resolve(u.canEdit()).then(function (ok) { ui.admin = ok === true; render(); });
       }
     });
   }
