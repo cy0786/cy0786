@@ -80,6 +80,7 @@ main{min-width:0;display:flex;flex-direction:column;gap:14px}
 .chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-items:start}
 .chip{font-size:12px;padding:1px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
 .chip.draft{background:var(--warn-bg);color:var(--warn-fg)}
+.chip.private{background:var(--seal-soft);color:var(--seal)}
 .chip.where{background:transparent;border:1px solid var(--line);color:var(--muted)}
 .item-body{padding:0 16px 16px;display:grid;gap:14px;min-width:0}
 .sec-label{font-size:12px;letter-spacing:.12em;color:var(--muted);margin:0 0 4px}
@@ -677,6 +678,10 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   function findCat(id) { return state.categories.filter(function (c) { return c.id === id; })[0] || null; }
   function findGroup(id) { return state.groups.filter(function (g) { return g.id === id; })[0] || null; }
   function groupOf(c) { return (c && findGroup(c.group)) || state.groups[0] || null; }
+  // Not-public groups/items stay in the page but are only shown to admins (people who can publish).
+  function visGroup(g) { return ui.admin || !g.hidden; }
+  function visItems(c) { return c.items.filter(function (it) { return ui.admin || !it.hidden; }); }
+  function visCats(gid) { return catsIn(gid).filter(function (c) { return ui.admin || !c.items.length || visItems(c).length; }); }
   function catsIn(gid) { return state.categories.filter(function (c) { var g = groupOf(c); return g && g.id === gid; }); }
   function syncGroup() { var g = groupOf(findCat(ui.cat)); ui.group = g ? g.id : null; }
   function findItem(id) {
@@ -742,13 +747,13 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
 
   function renderMenu() {
     var cur = ui.view === "cat" && !ui.q.trim() ? ui.group : null;
-    document.getElementById("menu").innerHTML = state.groups.map(function (g) {
-      var cats = catsIn(g.id);
-      var n = cats.reduce(function (a, c) { return a + c.items.length; }, 0);
+    document.getElementById("menu").innerHTML = state.groups.filter(visGroup).map(function (g) {
+      var cats = visCats(g.id);
+      var n = cats.reduce(function (a, c) { return a + visItems(c).length; }, 0);
       return '<button type="button" class="pos" data-act="group" data-id="' + esc(g.id) + '" aria-current="' + (cur === g.id) + '">' +
         '<span class="code" aria-hidden="true">' + esc(g.code) + '</span><span class="pname">【' + esc(g.name) + '】</span>' +
         '<span class="plain">' + esc(g.plain || cats.map(function (c) { return c.name; }).join(" / ") || "尚無章節") + '</span>' +
-        '<span class="pcount">' + n + ' 個流程</span></button>';
+        '<span class="pcount">' + n + ' 個流程' + (g.hidden ? ' · <span class="chip private">不公開</span>' : "") + '</span></button>';
     }).join("");
   }
 
@@ -767,7 +772,8 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     if (q) {
       var hits = [];
       state.categories.forEach(function (c) {
-        c.items.forEach(function (it) {
+        var cg = groupOf(c); if (cg && !visGroup(cg)) return;
+        visItems(c).forEach(function (it) {
           var hay = [c.name, it.title, it.summary, it.timing, it.owner].concat(it.steps, it.notes).join("\n").toLowerCase();
           if (hay.indexOf(q) >= 0) hits.push({ c: c, it: it });
         });
@@ -776,23 +782,25 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       h += hits.length ? '<div class="list">' + hits.map(function (x) { return itemHtml(x.it, x.c, true); }).join("") + "</div>" : '<div class="empty">找不到符合的內容，換個關鍵字試試。</div>';
     } else {
       var g = findGroup(ui.group);
+      if (g && !visGroup(g)) { g = state.groups.filter(visGroup)[0] || null; ui.group = g ? g.id : null; }
       if (!g) { h += '<div class="empty">還沒有任何工作項目。</div>'; }
       else {
-        var cats = catsIn(g.id);
+        var cats = visCats(g.id);
         var c = findCat(ui.cat);
-        if (!c || groupOf(c) !== g) { c = cats[0] || null; ui.cat = c ? c.id : null; }
+        if (!c || cats.indexOf(c) < 0) { c = cats[0] || null; ui.cat = c ? c.id : null; }
         if (ui.edit) {
           h += '<div class="cat-edit form"><p class="sec-label">工作項目</p>' +
             '<div class="row"><label style="flex:2 1 160px">名稱<input type="text" id="g-name-' + esc(g.id) + '" data-gfield="name" data-id="' + esc(g.id) + '" value="' + esc(g.name) + '"></label>' +
             '<label style="flex:1 1 80px">代號<input type="text" id="g-code-' + esc(g.id) + '" data-gfield="code" data-id="' + esc(g.id) + '" value="' + esc(g.code) + '" maxlength="4"></label></div>' +
             '<label>選單小字<input type="text" id="g-plain-' + esc(g.id) + '" data-gfield="plain" data-id="' + esc(g.id) + '" value="' + esc(g.plain) + '"><span class="hint">顯示在上方選單卡片上；留白則自動列出章節名稱</span></label>' +
-            '<label>說明<input type="text" id="g-desc-' + esc(g.id) + '" data-gfield="desc" data-id="' + esc(g.id) + '" value="' + esc(g.desc) + '"></label></div>';
+            '<label>說明<input type="text" id="g-desc-' + esc(g.id) + '" data-gfield="desc" data-id="' + esc(g.id) + '" value="' + esc(g.desc) + '"></label>' +
+            '<label class="check"><input type="checkbox" id="g-hidden-' + esc(g.id) + '" data-gfield="hidden" data-id="' + esc(g.id) + '"' + (g.hidden ? " checked" : "") + '> 整個工作項目不公開（只有管理者看得到）</label></div>';
         } else {
-          h += '<div class="cat-head"><h2>【' + esc(g.name) + '】</h2>' + (g.desc ? "<p>" + esc(g.desc) + "</p>" : "") + "</div>";
+          h += '<div class="cat-head"><h2>【' + esc(g.name) + '】' + (g.hidden ? ' <span class="chip private">不公開</span>' : "") + '</h2>' + (g.desc ? "<p>" + esc(g.desc) + "</p>" : "") + "</div>";
         }
         if (cats.length > 1 || ui.edit) {
           h += '<div class="tabs" role="tablist">' + cats.map(function (x) {
-            return '<button type="button" class="tab" data-act="cat" data-id="' + esc(x.id) + '" aria-current="' + (c === x) + '">' + esc(x.name) + '<span class="n">' + x.items.length + "</span></button>";
+            return '<button type="button" class="tab" data-act="cat" data-id="' + esc(x.id) + '" aria-current="' + (c === x) + '">' + esc(x.name) + '<span class="n">' + visItems(x).length + "</span></button>";
           }).join("") + (ui.edit ? '<button type="button" class="tab" data-act="add-cat">＋ 新增章節</button>' : "") + "</div>";
         }
         if (!c) { h += '<div class="empty">這個工作項目還沒有章節。' + (ui.edit ? "按「＋ 新增章節」開始。" : "") + "</div>"; }
@@ -811,7 +819,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
           } else if (cats.length > 1 && c.desc) {
             h += '<p class="cat-desc">' + esc(c.desc) + "</p>";
           }
-          h += '<div class="list">' + c.items.map(function (it) { return itemHtml(it, c, false); }).join("") + "</div>";
+          h += '<div class="list">' + visItems(c).map(function (it) { return itemHtml(it, c, false); }).join("") + "</div>";
           if (!c.items.length) h += '<div class="empty">這個章節還沒有流程。</div>';
           if (ui.edit) h += '<div class="row"><button type="button" class="btn" data-act="add-item" data-id="' + esc(c.id) + '">＋ 新增流程</button></div>';
         }
@@ -824,6 +832,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     var open = !!ui.open[it.id] || (ui.q.trim() && ui.open[it.id] !== false);
     var chips = "";
     if (showCat) { var gg = groupOf(c); chips += '<span class="chip where">' + (gg ? esc(gg.name) + " · " : "") + esc(c.name) + "</span>"; }
+    if (it.hidden && ui.admin) chips += '<span class="chip private">不公開</span>';
     if (it.draft && ui.admin) chips += '<span class="chip draft">待確認</span>';
     var h = '<article class="item' + (open ? " open" : "") + '">' +
       '<button type="button" class="item-head" data-act="toggle" data-id="' + esc(it.id) + '" aria-expanded="' + open + '">' +
@@ -872,6 +881,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
           (safeImg(im.src) ? '<button type="button" class="btn small" data-act="img-clear" data-img="' + iid + '" data-id="' + id + '">移除圖片</button>' : "") +
           '<button type="button" class="btn small danger" data-act="img-del" data-img="' + iid + '" data-id="' + id + '">刪除這個欄位</button></div></div>';
       }).join("") + '<div class="row"><button type="button" class="btn small" data-act="img-add" data-id="' + id + '">＋ 新增圖片欄位</button></div></div></div>' +
+      '<label class="check"><input type="checkbox" id="f-' + id + '-hidden" data-field="hidden" data-id="' + id + '"' + (it.hidden ? " checked" : "") + '> 這個流程不公開（只有管理者看得到）</label>' +
       '<label class="check"><input type="checkbox" id="f-' + id + '-draft" data-field="draft" data-id="' + id + '"' + (it.draft ? " checked" : "") + '> 待確認</label>' +
       '<div class="row end"><button type="button" class="btn small" data-act="up" data-id="' + id + '">上移</button><button type="button" class="btn small" data-act="down" data-id="' + id + '">下移</button>' +
       (ui.confirm === "item:" + it.id
@@ -910,7 +920,8 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     }
     if (t.dataset.gfield) {
       var g = findGroup(t.dataset.id); if (!g) return;
-      g[t.dataset.gfield] = t.value; markDirty(); renderMenu();
+      g[t.dataset.gfield] = t.type === "checkbox" ? t.checked : t.value; markDirty(); renderMenu();
+      if (t.type === "checkbox") renderMain();
       return;
     }
     if (t.dataset.cfield) {
@@ -931,6 +942,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       return { label: "", url: l };
     }).filter(Boolean);
     else if (k === "draft") it.draft = t.checked;
+    else if (k === "hidden") { it.hidden = t.checked; it.updated = today(); markDirty(); renderMain(); return; }
     else it[k] = t.value;
     it.updated = today();
     markDirty();
