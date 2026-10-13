@@ -110,6 +110,11 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
 .savebar .msg{flex-basis:100%;font-size:13px;color:var(--seal)}
 .savebar .msg:empty{display:none}
 .toast{font-size:13px;color:var(--ok)}
+.modal{position:fixed;inset:0;z-index:10;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px}
+.modal .box{background:var(--sheet);color:var(--ink);border-radius:var(--r);padding:20px;width:min(360px,100%);display:grid;gap:10px;font-family:var(--f-body);font-size:15px;line-height:1.6}
+.modal h3{margin:0;font-family:var(--f-display);font-size:18px}
+.modal input{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--paper);color:var(--ink);font:inherit}
+.modal .err{color:var(--seal);font-size:13px;min-height:1em;margin:0}
 .shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
 .shot{margin:0;display:grid;gap:6px;min-width:0}
 .shot img{width:100%;height:auto;border:1px solid var(--line);border-radius:8px;background:var(--sheet);cursor:zoom-in}
@@ -727,7 +732,10 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     document.getElementById("q").addEventListener("input", function (e) { ui.q = e.target.value; renderMenu(); renderMain(); });
     document.getElementById("edit-toggle").addEventListener("click", function () {
       if (ui.edit && ui.dirty) { ui.msg = "還有未儲存的修改，請先儲存或捨棄。"; renderSavebar(); return; }
-      ui.edit = !ui.edit; ui.confirm = null; render();
+      if (STANDALONE && !ui.admin) { openPwBox(state.meta.pw ? "login" : "setup"); return; }
+      ui.edit = !ui.edit; ui.confirm = null;
+      if (STANDALONE && !ui.edit) ui.admin = false; // leaving the back office logs out of the file copy
+      render();
     });
     document.getElementById("app").addEventListener("click", onClick);
     document.getElementById("app").addEventListener("input", onInput);
@@ -739,10 +747,11 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   function renderTop() {
     document.getElementById("upd").textContent = "法律事務部｜行政人員工作流程 · 最後更新 " + (state.meta.updated || "");
     var b = document.getElementById("edit-toggle");
-    // Back office: only people the platform says can publish (owner, or Editors added via Share) see it.
+    // Back office: inside Claude, only people the platform says can publish see it;
+    // in the shared .html file it is password-gated (real write protection = H: folder permissions).
     b.textContent = ui.edit ? "離開後台" : "後台管理";
     b.className = "btn" + (ui.edit ? " on" : "");
-    b.hidden = !ui.admin && !ui.edit;
+    b.hidden = STANDALONE ? false : (!ui.admin && !ui.edit);
   }
 
   function renderMenu() {
@@ -767,7 +776,9 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   function renderMain() {
     var m = document.getElementById("main"); var h = "";
     var q = ui.q.trim().toLowerCase();
-    if (ui.edit) h += '<div class="banner">後台管理模式：修改後按下方「儲存並發布」，所有人看到的內容才會更新。</div>';
+    if (ui.edit) h += STANDALONE
+      ? '<div class="banner">後台管理模式：修改後按下方「儲存」，會直接存回這個檔案，同仁重新整理就會看到新內容。 <button type="button" class="linkbtn" data-act="pw-change">變更後台密碼</button></div>'
+      : '<div class="banner">後台管理模式：修改後按下方「儲存並發布」，所有人看到的內容才會更新。</div>';
     else if (ui.admin && hasDraft() && !q && ui.view === "cat") h += '<div class="banner">標示「待確認」的流程還需要確認內容，請到後台檢查，確認後取消勾選「待確認」。（這段提示與「待確認」標籤只有管理者看得到）</div>';
     if (q) {
       var hits = [];
@@ -896,9 +907,9 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     if (bar.hidden) return;
     var hadFocus = document.activeElement && document.activeElement.id === "save-note";
     bar.innerHTML = '<div class="in">' +
-      (ui.dirty ? '<strong>有未儲存的修改</strong>' +
+      (ui.dirty ? '<strong>有未儲存的修改</strong>' + (STANDALONE && !fileHandle ? '<span class="hint" style="font-size:13px;color:var(--muted)">第一次儲存會跳出存檔視窗，請選 H 槽上這個檔案本身並選「取代」。</span>' : "") +
         '<button type="button" class="btn" data-act="discard"' + (ui.saving ? " disabled" : "") + '>捨棄</button>' +
-        '<button type="button" class="btn primary" data-act="save"' + (ui.saving || ui.readOnly ? " disabled" : "") + ">" + (ui.saving ? "儲存中…" : STANDALONE ? "下載更新後的檔案" : "儲存並發布") + "</button>" : "") +
+        '<button type="button" class="btn primary" data-act="save"' + (ui.saving || ui.readOnly ? " disabled" : "") + ">" + (ui.saving ? "儲存中…" : STANDALONE ? "儲存" : "儲存並發布") + "</button>" : "") +
       '<span class="msg">' + esc(ui.msg) + "</span></div>";
     if (hadFocus) { var n = document.getElementById("save-note"); n.focus(); n.setSelectionRange(n.value.length, n.value.length); }
   }
@@ -1000,6 +1011,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
         var lb = document.createElement("div"); lb.className = "lightbox"; lb.innerHTML = '<img alt="" src="' + esc(b.dataset.src) + '">';
         lb.addEventListener("click", function () { lb.remove(); }); document.body.appendChild(lb); return;
       }
+      case "pw-change": openPwBox("change"); return;
       case "ask": ui.confirm = b.dataset.key; break;
       case "cancel": ui.confirm = null; break;
       case "discard":
@@ -1040,11 +1052,90 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     ui.msg = "已下載新版檔案（admin-manual.html），請改名後取代原本分享出去的檔案。"; render();
   }
 
+  // ---- Shared-file back office: password + save straight back into this .html file ----
+  function hashPw(pw, salt) {
+    var data = new TextEncoder().encode(salt + "|" + pw);
+    return crypto.subtle.digest("SHA-256", data).then(function (buf) {
+      return Array.prototype.map.call(new Uint8Array(buf), function (x) { return ("0" + x.toString(16)).slice(-2); }).join("");
+    });
+  }
+  function openPwBox(mode) {
+    var titles = { setup: "設定後台密碼", login: "後台登入", change: "變更後台密碼" };
+    var box = document.createElement("div"); box.className = "modal";
+    box.innerHTML = '<form class="box"><h3>' + titles[mode] + '</h3>' +
+      (mode === "login" ? '<input type="password" id="pw1" placeholder="請輸入後台密碼" autocomplete="current-password">'
+        : '<span class="hint" style="font-size:13px;color:var(--muted)">' + (mode === "setup" ? "第一次使用，請設定後台密碼（至少 4 個字）。" : "請輸入新密碼（至少 4 個字）。") + '設定後要按「儲存」才會寫入檔案。</span>' +
+          '<input type="password" id="pw1" placeholder="新密碼" autocomplete="new-password"><input type="password" id="pw2" placeholder="再輸入一次" autocomplete="new-password">') +
+      '<p class="err" id="pw-err"></p><div class="row end"><button type="button" class="btn" id="pw-cancel">取消</button><button type="submit" class="btn primary">確定</button></div></form>';
+    document.body.appendChild(box);
+    var f = box.querySelector("form"), err = box.querySelector("#pw-err");
+    box.querySelector("#pw1").focus();
+    box.querySelector("#pw-cancel").addEventListener("click", function () { box.remove(); });
+    f.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var p1 = box.querySelector("#pw1").value, p2El = box.querySelector("#pw2");
+      if (mode === "login") {
+        var pw = state.meta.pw || {};
+        hashPw(p1, pw.salt || "").then(function (hx) {
+          if (hx !== pw.hash) { err.textContent = "密碼錯誤"; return; }
+          box.remove(); ui.admin = true; ui.edit = true; render();
+        });
+        return;
+      }
+      if (p1.length < 4) { err.textContent = "密碼至少 4 個字"; return; }
+      if (p1 !== p2El.value) { err.textContent = "兩次輸入的密碼不一樣"; return; }
+      var salt = uid();
+      hashPw(p1, salt).then(function (hx) {
+        box.remove(); state.meta.pw = { salt: salt, hash: hx };
+        ui.admin = true; ui.edit = true; markDirty();
+        ui.msg = "密碼已設定，請按「儲存」寫入檔案。"; render();
+      });
+    });
+  }
+  var fileHandle = null;
+  function idb(fn) {
+    return new Promise(function (res) {
+      try {
+        var r = indexedDB.open("admin-manual", 1);
+        r.onupgradeneeded = function () { r.result.createObjectStore("h"); };
+        r.onsuccess = function () { try { var tx = r.result.transaction("h", "readwrite"); var q = fn(tx.objectStore("h")); q.onsuccess = function () { res(q.result); }; q.onerror = function () { res(null); }; } catch (e) { res(null); } };
+        r.onerror = function () { res(null); };
+      } catch (e) { res(null); }
+    });
+  }
+  function saveToFile(next) {
+    if (!window.showSaveFilePicker) { downloadDocument(next); return; }
+    var key = location.pathname;
+    ui.saving = true; ui.msg = ""; renderSavebar();
+    var got = fileHandle ? Promise.resolve(fileHandle) : idb(function (s) { return s.get(key); });
+    got.then(function (hd) {
+      if (hd) return hd.queryPermission({ mode: "readwrite" }).then(function (st) {
+        if (st === "granted") return hd;
+        return hd.requestPermission({ mode: "readwrite" }).then(function (st2) { return st2 === "granted" ? hd : null; });
+      });
+      return null;
+    }).then(function (hd) {
+      if (hd) return hd;
+      var name = decodeURIComponent(location.pathname.split("/").pop() || "") || "行政工作手冊.html";
+      return window.showSaveFilePicker({ suggestedName: name, types: [{ description: "網頁檔", accept: { "text/html": [".html"] } }] });
+    }).then(function (hd) {
+      fileHandle = hd; idb(function (s) { return s.put(hd, key); });
+      return hd.createWritable().then(function (w) { return w.write(buildDocument(next)).then(function () { return w.close(); }); });
+    }).then(function () {
+      ui.saving = false; ui.dirty = false; saved = next; state = clone(next);
+      ui.msg = "已儲存到檔案。同仁重新整理網頁就會看到新內容。"; render();
+    }, function (er) {
+      ui.saving = false;
+      ui.msg = er && er.name === "AbortError" ? "已取消儲存，內容還沒存檔。" : er && er.name === "NotAllowedError" ? "沒有寫入權限：請確認你對 H 槽這個資料夾有修改權限。" : "儲存失敗，請稍後再試。";
+      renderSavebar();
+    });
+  }
+
   function save() {
     if (STANDALONE) {
       var nx = clone(state);
       nx.meta.updated = today();
-      downloadDocument(nx); return;
+      saveToFile(nx); return;
     }
     if (!artifactApi) {
       if (window.claude && window.claude.use && !ui.retried) {
