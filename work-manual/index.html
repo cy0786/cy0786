@@ -63,6 +63,12 @@ button{cursor:pointer}
 .tab .n{font-size:12px;margin-left:4px;font-variant-numeric:tabular-nums}
 .adminbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:var(--seal-soft);color:var(--seal);border-radius:var(--r);padding:10px 14px;font-size:14px}
 .adminbar strong{margin-right:auto}
+.panel{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:20px;max-width:440px}
+.panel h2{font-family:var(--f-display);margin:0;font-size:22px}
+.panel p{margin:0;color:var(--muted)}
+.err{color:var(--seal)!important;font-size:14px}
+.linkbtn.quiet{color:var(--muted);text-decoration:none;font-size:12px}
+.pubswitch{background:var(--accent-soft);border-radius:8px;padding:8px 10px;color:var(--ink)!important;font-size:14px!important;font-weight:500}
 .foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:12px}
 .linkbtn{all:unset;cursor:pointer;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 .linkbtn:focus-visible{outline:2px solid var(--accent)}
@@ -130,7 +136,13 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 <div id="app"></div>
-<script type="application/json" id="manual-data">
+<script type="application/json" id="public-data">
+null
+</script>
+<script type="application/json" id="vault">
+null
+</script>
+<script type="application/json" id="setup-data">
 {
  "meta": {
   "updated": "2026-10-09"
@@ -203,7 +215,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       }
      ],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     },
     {
      "id": "board-2",
@@ -223,7 +235,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      ],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     },
     {
      "id": "board-3",
@@ -244,7 +256,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      ],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     }
    ],
    "group": "g-if"
@@ -273,7 +285,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      ],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     },
     {
      "id": "agm-2",
@@ -293,7 +305,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      ],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     },
     {
      "id": "agm-3",
@@ -311,7 +323,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      "notes": [],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     }
    ],
    "group": "g-if"
@@ -338,7 +350,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      ],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     },
     {
      "id": "dis-2",
@@ -358,7 +370,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      ],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     },
     {
      "id": "dis-3",
@@ -375,7 +387,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      "notes": [],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     }
    ],
    "group": "g-if"
@@ -403,7 +415,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      ],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     },
     {
      "id": "con-2",
@@ -422,7 +434,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      ],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     },
     {
      "id": "con-3",
@@ -439,7 +451,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      "notes": [],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     }
    ],
    "group": "g-dh"
@@ -463,7 +475,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      "notes": [],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     },
     {
      "id": "seal-2",
@@ -480,7 +492,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      "notes": [],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     },
     {
      "id": "seal-3",
@@ -496,7 +508,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      "notes": [],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     },
     {
      "id": "seal-4",
@@ -512,7 +524,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      "notes": [],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     }
    ],
    "group": "g-mk"
@@ -538,7 +550,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      "notes": [],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     },
     {
      "id": "aud-2",
@@ -558,7 +570,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      ],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     },
     {
      "id": "aud-3",
@@ -577,7 +589,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      ],
      "refs": [],
      "updated": "2026-10-09",
-     "draft": true
+     "published": false
     }
    ],
    "group": "g-ump"
@@ -605,7 +617,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      ],
      "refs": [],
      "updated": "2026-10-13",
-     "draft": true
+     "published": false
     },
     {
      "id": "gov-2",
@@ -623,7 +635,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      "notes": [],
      "refs": [],
      "updated": "2026-10-13",
-     "draft": true
+     "published": false
     },
     {
      "id": "gov-3",
@@ -641,7 +653,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      "notes": [],
      "refs": [],
      "updated": "2026-10-13",
-     "draft": true
+     "published": false
     },
     {
      "id": "gov-4",
@@ -660,7 +672,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      ],
      "refs": [],
      "updated": "2026-10-13",
-     "draft": true
+     "published": false
     },
     {
      "id": "gov-5",
@@ -677,7 +689,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
      "notes": [],
      "refs": [],
      "updated": "2026-10-13",
-     "draft": true
+     "published": false
     }
    ]
   }
@@ -701,19 +713,20 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
 <script id="app-script">
 (function () {
   "use strict";
-  var DATA_EL = document.getElementById("manual-data");
-  var saved = JSON.parse(DATA_EL.textContent);
-  var state = clone(saved);
-  var ui = { view: "cat", cat: null, open: {}, q: "", edit: false, editor: false, dirty: false, confirm: null, saving: false, msg: "", note: "" };
-  var artifactApi = null, downloadsApi = null;
-  // The 後台 (edit mode) exists only in the Claude-hosted copy, and only for people
-  // with edit permission there. Exported share copies carry meta.mode = "viewer".
-  var VIEWER_COPY = saved.meta && saved.meta.mode === "viewer";
+  // Three data blocks live in this file:
+  //   public-data : only the items marked 公開 — what everyone sees.
+  //   vault       : the full content (unpublished items, change log), AES-GCM encrypted
+  //                 with a key derived from the back-office password. Never stored in clear.
+  //   setup-data  : first run only, before a password exists; dropped on the first save.
+  function readJSON(id) { var el = document.getElementById(id); if (!el) return null; try { return JSON.parse(el.textContent); } catch (e) { return null; } }
+  var pubData = readJSON("public-data");
+  var vault = readJSON("vault");
+  var setupData = readJSON("setup-data");
+  var full = null, saved = null, password = null;
+  if (!pubData) pubData = setupData ? publicOf(setupData) : { meta: {}, groups: [], categories: [] };
 
-  if (!state.groups) state.groups = [];
-  try { var c = localStorage.getItem("wm-cat"); if (c) ui.cat = c; } catch (e) {}
-  if (!findCat(ui.cat)) ui.cat = state.categories[0] ? state.categories[0].id : null;
-  syncGroup();
+  var ui = { view: "cat", group: null, cat: null, open: {}, q: "", edit: false, dirty: false, confirm: null, saving: false, msg: "", note: "", loginErr: "", busy: false };
+  var D = pubData;
 
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
   function today() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
@@ -724,19 +737,60 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     var eq = esc(q).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     return t.replace(new RegExp(eq, "gi"), function (m) { return "<mark>" + m + "</mark>"; });
   }
-  function findCat(id) { return state.categories.filter(function (c) { return c.id === id; })[0] || null; }
-  function findGroup(id) { return state.groups.filter(function (g) { return g.id === id; })[0] || null; }
-  function groupOf(c) { return (c && findGroup(c.group)) || state.groups[0] || null; }
-  function catsIn(gid) { return state.categories.filter(function (c) { var g = groupOf(c); return g && g.id === gid; }); }
-  function syncGroup() { var g = groupOf(findCat(ui.cat)); ui.group = g ? g.id : null; }
+  function safeUrl(u) { return /^https?:\/\//i.test(u || "") ? u : ""; }
+
+  function publicOf(data) {
+    var cats = data.categories.map(function (c) {
+      var x = clone(c); x.items = c.items.filter(function (i) { return i.published; }); return x;
+    }).filter(function (c) { return c.items.length; });
+    var used = {}; cats.forEach(function (c) { used[c.group] = true; });
+    var groups = data.groups.filter(function (g) { return used[g.id]; }).map(function (g) {
+      // A custom card caption may name chapters that are not public yet; fall back to the public chapter names.
+      var x = clone(g);
+      var all = data.categories.filter(function (c) { return c.group === g.id; }).length;
+      if (cats.filter(function (c) { return c.group === g.id; }).length < all) delete x.plain;
+      return x;
+    });
+    return { meta: { updated: data.meta.updated }, groups: groups, categories: cats };
+  }
+  function findIn(arr, id) { return arr.filter(function (x) { return x.id === id; })[0] || null; }
+  function findCat(id) { return findIn(D.categories, id); }
+  function findGroup(id) { return findIn(D.groups, id); }
+  function groupOf(c) { return (c && findGroup(c.group)) || D.groups[0] || null; }
+  function catsIn(gid) { return D.categories.filter(function (c) { var g = groupOf(c); return g && g.id === gid; }); }
   function findItem(id) {
-    for (var i = 0; i < state.categories.length; i++) {
-      var items = state.categories[i].items;
-      for (var j = 0; j < items.length; j++) if (items[j].id === id) return { cat: state.categories[i], item: items[j], idx: j };
+    for (var i = 0; i < full.categories.length; i++) {
+      var items = full.categories[i].items;
+      for (var j = 0; j < items.length; j++) if (items[j].id === id) return { cat: full.categories[i], item: items[j], idx: j };
     }
     return null;
   }
-  function safeUrl(u) { return /^https?:\/\//i.test(u || "") ? u : ""; }
+  function refreshView() {
+    D = ui.edit ? full : (full ? publicOf(full) : pubData);
+    if (!findGroup(ui.group)) ui.group = D.groups[0] ? D.groups[0].id : null;
+    var c = findCat(ui.cat);
+    if (!c || groupOf(c).id !== ui.group) { c = catsIn(ui.group)[0]; ui.cat = c ? c.id : null; }
+  }
+
+  // ---------- crypto ----------
+  function b64(buf) { var s = "", b = new Uint8Array(buf); for (var i = 0; i < b.length; i++) s += String.fromCharCode(b[i]); return btoa(s); }
+  function unb64(s) { var bin = atob(s), b = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i); return b; }
+  function deriveKey(pw, salt, iter) {
+    return crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]).then(function (base) {
+      return crypto.subtle.deriveKey({ name: "PBKDF2", salt: salt, iterations: iter, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+    });
+  }
+  function encryptData(obj, pw) {
+    var salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12)), iter = 250000;
+    return deriveKey(pw, salt, iter).then(function (key) {
+      return crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, new TextEncoder().encode(JSON.stringify(obj)));
+    }).then(function (ct) { return { v: 1, iter: iter, salt: b64(salt), iv: b64(iv), ct: b64(ct) }; });
+  }
+  function decryptData(v, pw) {
+    return deriveKey(pw, unb64(v.salt), v.iter).then(function (key) {
+      return crypto.subtle.decrypt({ name: "AES-GCM", iv: unb64(v.iv) }, key, unb64(v.ct));
+    }).then(function (pt) { return JSON.parse(new TextDecoder().decode(pt)); });
+  }
 
   var SEARCH_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>';
 
@@ -745,35 +799,36 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       '<header class="top"><div class="top-in">' +
       '<div class="brand"><div class="seal" aria-hidden="true"><span>法</span></div><div><h1>法務守備位置</h1><small id="upd"></small></div></div>' +
       '<div class="search">' + SEARCH_ICON + '<input id="q" type="search" placeholder="搜尋流程、步驟、注意事項…" aria-label="搜尋法務工作內容"></div>' +
-      '<button class="btn" id="edit-toggle" type="button"></button>' +
+      '<button class="btn" id="edit-toggle" type="button" hidden></button>' +
       '</div></header>' +
       '<div class="shell"><section class="hero"><p class="eyebrow">全功能戰術菜單</p><p class="lede">點選下方守備位置，一秒查閱法務的所有工作項目。</p>' +
       '<nav class="menu" id="menu" aria-label="守備位置"></nav></section><main id="main"></main><footer class="foot" id="foot"></footer></div>' +
       '<div class="savebar" id="savebar" hidden></div>';
     document.getElementById("q").addEventListener("input", function (e) { ui.q = e.target.value; renderMenu(); renderMain(); });
     document.getElementById("edit-toggle").addEventListener("click", function () {
-      if (!ui.editor) return;
-      if (ui.edit && ui.dirty) { ui.msg = "還有未儲存的修改，請先儲存或捨棄。"; renderSavebar(); return; }
-      ui.edit = !ui.edit; ui.confirm = null; if (!ui.edit && ui.view === "log") ui.view = "cat"; render();
+      if (!full) return;
+      ui.edit = !ui.edit; ui.confirm = null; ui.view = "cat"; render();
     });
-    document.getElementById("app").addEventListener("click", onClick);
-    document.getElementById("app").addEventListener("input", onInput);
-    document.getElementById("app").addEventListener("change", onInput);
+    var app = document.getElementById("app");
+    app.addEventListener("click", onClick);
+    app.addEventListener("input", onInput);
+    app.addEventListener("change", onInput);
+    app.addEventListener("submit", onSubmit);
   }
 
-  function render() { renderTop(); renderMenu(); renderMain(); renderFoot(); renderSavebar(); }
+  function render() { refreshView(); renderTop(); renderMenu(); renderMain(); renderFoot(); renderSavebar(); }
 
   function renderTop() {
-    document.getElementById("upd").textContent = "認識法務部門的工作 · 最後更新 " + (state.meta.updated || "");
+    document.getElementById("upd").textContent = "認識法務部門的工作 · 最後更新 " + ((full || D).meta.updated || "");
     var b = document.getElementById("edit-toggle");
-    b.textContent = ui.edit ? "離開後台" : "進入後台";
-    b.className = "btn" + (ui.edit ? " on" : "");
-    b.hidden = !ui.editor;
+    b.hidden = !full;
+    b.textContent = ui.edit ? "預覽前台" : "回到後台";
+    b.className = "btn" + (ui.edit ? "" : " on");
   }
 
   function renderMenu() {
     var cur = ui.view === "cat" && !ui.q.trim() ? ui.group : null;
-    document.getElementById("menu").innerHTML = state.groups.map(function (g) {
+    document.getElementById("menu").innerHTML = D.groups.map(function (g) {
       var cats = catsIn(g.id);
       var n = cats.reduce(function (a, c) { return a + c.items.length; }, 0);
       return '<button type="button" class="pos" data-act="group" data-id="' + esc(g.id) + '" aria-current="' + (cur === g.id) + '">' +
@@ -784,23 +839,29 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   }
 
   function renderFoot() {
-    document.getElementById("foot").innerHTML = '<span>內容由法務部門維護，流程有異動時隨時更新。</span>';
+    document.getElementById("foot").innerHTML = '<span>內容由法務部門維護，流程有異動時隨時更新。</span>' +
+      (full ? "" : '<button type="button" class="linkbtn quiet" data-act="login">管理</button>');
   }
 
-  function hasDraft() { return state.categories.some(function (c) { return c.items.some(function (i) { return i.draft; }); }); }
+  function countPub(items) { return items.filter(function (i) { return i.published; }).length; }
 
   function renderMain() {
     var m = document.getElementById("main"); var h = "";
     var q = ui.q.trim().toLowerCase();
-    if (ui.edit) h += '<div class="adminbar"><strong>後台編輯中 · 只有具編輯權限的人看得到</strong>' +
-      '<button type="button" class="btn small" data-act="log">變更紀錄（' + state.log.length + '）</button>' +
-      (downloadsApi ? '<button type="button" class="btn small" data-act="export">匯出分享版 HTML</button>' : "") + "</div>";
-    if (hasDraft() && !q && ui.view === "cat") h += '<div class="banner">' + (ui.edit
-      ? "標示「待確認」的流程是依法規整理的範例草稿，請改成公司實際做法，改完取消勾選「待確認」。"
-      : "標示「待確認」的內容仍在整理中，實際做法以法務部門說明為準。") + "</div>";
+    if (ui.view === "login") { m.innerHTML = loginHtml(); var f = document.getElementById("pw1"); if (f) f.focus(); return; }
+    if (ui.view === "pw") { m.innerHTML = pwHtml(); document.getElementById("pw1").focus(); return; }
+    if (ui.edit) {
+      var all = full.categories.reduce(function (a, c) { return a.concat(c.items); }, []);
+      h += '<div class="adminbar"><strong>後台管理中 · 已公開 ' + countPub(all) + ' / ' + all.length + ' 個流程</strong>' +
+        '<button type="button" class="btn small" data-act="log">變更紀錄（' + full.log.length + '）</button>' +
+        '<button type="button" class="btn small" data-act="pw">變更密碼</button>' +
+        '<button type="button" class="btn small" data-act="lock">登出</button></div>';
+    } else if (full) {
+      h += '<div class="banner">這是同仁會看到的畫面（只顯示已公開的流程）。</div>';
+    }
     if (q) {
       var hits = [];
-      state.categories.forEach(function (c) {
+      D.categories.forEach(function (c) {
         c.items.forEach(function (it) {
           var hay = [c.name, it.title, it.summary, it.timing, it.owner].concat(it.steps, it.notes).join("\n").toLowerCase();
           if (hay.indexOf(q) >= 0) hits.push({ c: c, it: it });
@@ -808,16 +869,15 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       });
       h += '<div class="cat-head"><h2>搜尋結果</h2><p>「' + esc(ui.q.trim()) + '」共 ' + hits.length + ' 筆</p></div>';
       h += hits.length ? '<div class="list">' + hits.map(function (x) { return itemHtml(x.it, x.c, true); }).join("") + "</div>" : '<div class="empty">找不到符合的內容，換個關鍵字試試。</div>';
-    } else if (ui.view === "log") {
-      h += '<div class="cat-head"><h2>變更紀錄</h2><p>每次儲存都會記下日期與修改說明。</p></div>';
-      h += '<div class="log">' + (state.log.map(function (l) { return "<div><time>" + esc(l.date) + "</time><span>" + esc(l.text) + "</span></div>"; }).join("") || "<div><span>尚無紀錄</span></div>") + "</div>";
+    } else if (ui.view === "log" && ui.edit) {
+      h += '<div class="cat-head"><h2>變更紀錄</h2><p>只在後台顯示，同仁看不到。</p></div>';
+      h += '<div class="log">' + (full.log.map(function (l) { return "<div><time>" + esc(l.date) + "</time><span>" + esc(l.text) + "</span></div>"; }).join("") || "<div><span>尚無紀錄</span></div>") + "</div>";
     } else {
       var g = findGroup(ui.group);
-      if (!g) { h += '<div class="empty">還沒有任何守備位置。</div>'; }
+      if (!g) { h += '<div class="empty">內容整理中，即將公開。</div>'; }
       else {
         var cats = catsIn(g.id);
         var c = findCat(ui.cat);
-        if (!c || groupOf(c) !== g) { c = cats[0] || null; ui.cat = c ? c.id : null; }
         if (ui.edit) {
           h += '<div class="cat-edit form"><p class="sec-label">守備位置</p>' +
             '<div class="row"><label style="flex:2 1 160px">名稱<input type="text" id="g-name-' + esc(g.id) + '" data-gfield="name" data-id="' + esc(g.id) + '" value="' + esc(g.name) + '"></label>' +
@@ -829,7 +889,8 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
         }
         if (cats.length > 1 || ui.edit) {
           h += '<div class="tabs" role="tablist">' + cats.map(function (x) {
-            return '<button type="button" class="tab" data-act="cat" data-id="' + esc(x.id) + '" aria-current="' + (c === x) + '">' + esc(x.name) + '<span class="n">' + x.items.length + "</span></button>";
+            var n = ui.edit ? countPub(x.items) + "/" + x.items.length : x.items.length;
+            return '<button type="button" class="tab" data-act="cat" data-id="' + esc(x.id) + '" aria-current="' + (c === x) + '">' + esc(x.name) + '<span class="n">' + n + "</span></button>";
           }).join("") + (ui.edit ? '<button type="button" class="tab" data-act="add-cat">＋ 新增章節</button>' : "") + "</div>";
         }
         if (!c) { h += '<div class="empty">這個守備位置還沒有章節。' + (ui.edit ? "按「＋ 新增章節」開始。" : "") + "</div>"; }
@@ -837,10 +898,11 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
           if (ui.edit) {
             h += '<div class="cat-edit form"><p class="sec-label">章節</p><label>章節名稱<input type="text" id="cat-name-' + esc(c.id) + '" data-cfield="name" data-id="' + esc(c.id) + '" value="' + esc(c.name) + '"></label>' +
               '<label>章節說明<input type="text" id="cat-desc-' + esc(c.id) + '" data-cfield="desc" data-id="' + esc(c.id) + '" value="' + esc(c.desc) + '"></label>' +
-              '<label>所屬守備位置<select id="cat-group-' + esc(c.id) + '" data-cfield="group" data-id="' + esc(c.id) + '">' + state.groups.map(function (x) {
+              '<label>所屬守備位置<select id="cat-group-' + esc(c.id) + '" data-cfield="group" data-id="' + esc(c.id) + '">' + full.groups.map(function (x) {
                 return '<option value="' + esc(x.id) + '"' + (x === g ? " selected" : "") + ">" + esc(x.name) + "</option>";
               }).join("") + "</select></label>" +
               '<div class="row"><button type="button" class="btn small" data-act="cat-up" data-id="' + esc(c.id) + '">章節上移</button><button type="button" class="btn small" data-act="cat-down" data-id="' + esc(c.id) + '">章節下移</button>' +
+              '<button type="button" class="btn small" data-act="pub-all" data-id="' + esc(c.id) + '">本章全部公開</button><button type="button" class="btn small" data-act="unpub-all" data-id="' + esc(c.id) + '">本章全部取消公開</button>' +
               (ui.confirm === "cat:" + c.id
                 ? '<span class="confirm">刪除「' + esc(c.name) + '」及其 ' + c.items.length + ' 個流程？</span><button type="button" class="btn small danger" data-act="cat-del" data-id="' + esc(c.id) + '">確定刪除</button><button type="button" class="btn small" data-act="cancel">取消</button>'
                 : '<button type="button" class="btn small danger" data-act="ask" data-key="cat:' + esc(c.id) + '">刪除章節</button>') +
@@ -857,11 +919,50 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     m.innerHTML = h;
   }
 
+  function loginHtml() {
+    var setup = !vault;
+    return '<form class="panel form" id="login-form" autocomplete="off"><h2>' + (setup ? "設定後台密碼" : "後台登入") + "</h2>" +
+      (setup ? '<p>第一次使用，請設定進入後台的密碼。之後只有知道密碼的人能編輯內容、看到未公開的流程。</p>' : "<p>請輸入後台密碼。</p>") +
+      '<label>密碼<input type="password" id="pw1" required minlength="' + (setup ? 6 : 1) + '"></label>' +
+      (setup ? '<label>再輸入一次<input type="password" id="pw2" required></label><p class="hint">密碼至少 6 個字元。忘記密碼就無法再進入後台，請另外妥善保存。</p>' : "") +
+      (ui.loginErr ? '<p class="err">' + esc(ui.loginErr) + "</p>" : "") +
+      '<div class="row"><button type="submit" class="btn primary"' + (ui.busy ? " disabled" : "") + ">" + (ui.busy ? "驗證中…" : setup ? "設定並進入後台" : "進入後台") + '</button><button type="button" class="btn" data-act="cancel-login">取消</button></div></form>';
+  }
+
+  function pwHtml() {
+    return '<form class="panel form" id="pw-form" autocomplete="off"><h2>變更密碼</h2><p>新密碼會在下次「儲存檔案」時生效。</p>' +
+      '<label>新密碼<input type="password" id="pw1" required minlength="6"></label><label>再輸入一次<input type="password" id="pw2" required></label>' +
+      (ui.loginErr ? '<p class="err">' + esc(ui.loginErr) + "</p>" : "") +
+      '<div class="row"><button type="submit" class="btn primary">變更</button><button type="button" class="btn" data-act="cancel-login">取消</button></div></form>';
+  }
+
+  function onSubmit(e) {
+    e.preventDefault();
+    var p1 = document.getElementById("pw1").value, p2El = document.getElementById("pw2");
+    ui.loginErr = "";
+    if (p2El && p1 !== p2El.value) { ui.loginErr = "兩次輸入的密碼不一致。"; renderMain(); return; }
+    if (e.target.id === "pw-form") {
+      password = p1; ui.view = "cat"; markDirty(); ui.msg = "密碼已變更，請按「儲存檔案」讓新密碼生效。"; render(); return;
+    }
+    if (!vault) { enterBackOffice(setupData, p1); ui.dirty = true; ui.msg = "密碼已設定，請按「儲存檔案」，把加密後的檔案存回 H 槽。"; render(); return; }
+    ui.busy = true; renderMain();
+    decryptData(vault, p1).then(function (data) {
+      ui.busy = false; enterBackOffice(data, p1); render();
+    }, function () {
+      ui.busy = false; ui.loginErr = "密碼不正確。"; renderMain();
+    });
+  }
+
+  function enterBackOffice(data, pw) {
+    full = clone(data); saved = clone(data); password = pw;
+    ui.edit = true; ui.view = "cat"; ui.loginErr = "";
+  }
+
   function itemHtml(it, c, showCat) {
     var open = !!ui.open[it.id] || (ui.q.trim() && ui.open[it.id] !== false);
     var chips = "";
     if (showCat) { var gg = groupOf(c); chips += '<span class="chip where">' + (gg ? esc(gg.name) + " · " : "") + esc(c.name) + "</span>"; }
-    if (it.draft) chips += '<span class="chip draft">待確認</span>';
+    if (ui.edit) chips += it.published ? '<span class="chip">已公開</span>' : '<span class="chip draft">未公開</span>';
     var h = '<article class="item' + (open ? " open" : "") + '">' +
       '<button type="button" class="item-head" data-act="toggle" data-id="' + esc(it.id) + '" aria-expanded="' + open + '">' +
       '<span class="item-title">' + hl(it.title || "（未命名流程）") + "</span>" +
@@ -892,11 +993,11 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
         (hint ? '<span class="hint">' + hint + "</span>" : "") + "</label>";
     }
     return '<div class="form">' +
+      '<label class="check pubswitch"><input type="checkbox" id="f-' + id + '-published" data-field="published" data-id="' + id + '"' + (it.published ? " checked" : "") + '> 公開給同仁看</label>' +
       f("流程名稱", "title", it.title) + f("摘要", "summary", it.summary) + f("時程／期限", "timing", it.timing) + f("負責人／單位", "owner", it.owner) +
       f("作業步驟", "steps", it.steps.join("\n"), true, "一行一個步驟，順序即步驟順序") +
       f("注意事項", "notes", it.notes.join("\n"), true, "一行一點") +
       f("相關連結", "refs", it.refs.map(function (r) { return (r.label ? r.label + " | " : "") + r.url; }).join("\n"), true, "一行一個，格式：名稱 | https://網址") +
-      '<label class="check"><input type="checkbox" id="f-' + id + '-draft" data-field="draft" data-id="' + id + '"' + (it.draft ? " checked" : "") + '> 待確認（範例草稿）</label>' +
       '<div class="row end"><button type="button" class="btn small" data-act="up" data-id="' + id + '">上移</button><button type="button" class="btn small" data-act="down" data-id="' + id + '">下移</button>' +
       (ui.confirm === "item:" + it.id
         ? '<span class="confirm">確定刪除這個流程？</span><button type="button" class="btn small danger" data-act="del" data-id="' + id + '">確定刪除</button><button type="button" class="btn small" data-act="cancel">取消</button>'
@@ -906,13 +1007,13 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
 
   function renderSavebar() {
     var bar = document.getElementById("savebar");
-    bar.hidden = !(ui.edit && (ui.dirty || ui.msg));
+    bar.hidden = !(full && (ui.dirty || ui.msg));
     if (bar.hidden) return;
     var hadFocus = document.activeElement && document.activeElement.id === "save-note";
     bar.innerHTML = '<div class="in">' +
       (ui.dirty ? '<strong>有未儲存的修改</strong><input id="save-note" type="text" placeholder="修改說明（例如：更新股東會通知期限）" value="' + esc(ui.note) + '">' +
-        '<button type="button" class="btn" data-act="discard"' + (ui.saving ? " disabled" : "") + '>捨棄</button>' +
-        '<button type="button" class="btn primary" data-act="save"' + (ui.saving ? " disabled" : "") + ">" + (ui.saving ? "儲存中…" : "儲存並發布") + "</button>" : "") +
+        '<button type="button" class="btn" data-act="discard"' + (ui.saving ? " disabled" : "") + '>捨棄修改</button>' +
+        '<button type="button" class="btn primary" data-act="save"' + (ui.saving ? " disabled" : "") + ">" + (ui.saving ? "儲存中…" : "儲存檔案") + "</button>" : "") +
       '<span class="msg">' + esc(ui.msg) + "</span></div>";
     if (hadFocus) { var n = document.getElementById("save-note"); n.focus(); n.setSelectionRange(n.value.length, n.value.length); }
   }
@@ -922,30 +1023,35 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   function onInput(e) {
     var t = e.target;
     if (t.id === "save-note") { ui.note = t.value; return; }
+    if (!ui.edit) return;
     if (t.dataset.gfield) {
-      var g = findGroup(t.dataset.id); if (!g) return;
+      var g = findGroup(t.dataset.id); if (!g || g[t.dataset.gfield] === t.value) return;
       g[t.dataset.gfield] = t.value; markDirty(); renderMenu();
       return;
     }
     if (t.dataset.cfield) {
-      var c = findCat(t.dataset.id); if (!c) return;
-      if (c[t.dataset.cfield] === t.value) return;
+      var c = findCat(t.dataset.id); if (!c || c[t.dataset.cfield] === t.value) return;
       c[t.dataset.cfield] = t.value; markDirty();
-      if (t.dataset.cfield === "group") { ui.cat = c.id; syncGroup(); render(); }
-      else if (t.dataset.cfield === "name") { renderMenu(); }
+      if (t.dataset.cfield === "group") { ui.cat = c.id; ui.group = c.group; render(); }
+      else if (t.dataset.cfield === "name") renderMenu();
       return;
     }
     if (!t.dataset.field) return;
     var f = findItem(t.dataset.id); if (!f) return;
     var it = f.item, k = t.dataset.field;
+    if (k === "published") {
+      if (it.published === t.checked) return;
+      it.published = t.checked; markDirty(); renderMain(); renderMenu(); return;
+    }
+    var before = JSON.stringify(it[k]);
     if (k === "steps" || k === "notes") it[k] = t.value.split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
     else if (k === "refs") it.refs = t.value.split("\n").map(function (l) {
       l = l.trim(); if (!l) return null;
       var p = l.split("|"); if (p.length > 1) return { label: p[0].trim(), url: p.slice(1).join("|").trim() };
       return { label: "", url: l };
     }).filter(Boolean);
-    else if (k === "draft") it.draft = t.checked;
     else it[k] = t.value;
+    if (JSON.stringify(it[k]) === before) return;
     it.updated = today();
     markDirty();
   }
@@ -955,35 +1061,43 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   function onClick(e) {
     var b = e.target.closest("[data-act]"); if (!b) return;
     var act = b.dataset.act, id = b.dataset.id, f, c, i;
+    var editOnly = ["add-cat", "cat-up", "cat-down", "cat-del", "add-item", "up", "down", "del", "ask", "pub-all", "unpub-all", "log", "pw", "lock"];
+    if (editOnly.indexOf(act) >= 0 && !ui.edit) return;
     switch (act) {
       case "group":
         c = catsIn(id)[0];
         ui.view = "cat"; ui.group = id; ui.cat = c ? c.id : null; ui.q = ""; document.getElementById("q").value = "";
-        try { if (c) localStorage.setItem("wm-cat", c.id); } catch (er) {}
         break;
       case "cat":
-        ui.view = "cat"; ui.cat = id; syncGroup(); ui.q = ""; document.getElementById("q").value = "";
-        try { localStorage.setItem("wm-cat", id); } catch (er) {}
+        ui.view = "cat"; ui.cat = id; ui.group = groupOf(findCat(id)).id; ui.q = ""; document.getElementById("q").value = "";
         break;
-      case "export": exportShareCopy(); return;
-      case "log": if (!ui.edit) return; ui.view = "log"; ui.q = ""; document.getElementById("q").value = ""; break;
+      case "login": ui.view = "login"; ui.loginErr = ""; ui.q = ""; document.getElementById("q").value = ""; break;
+      case "cancel-login": ui.view = "cat"; ui.loginErr = ""; break;
+      case "pw": ui.view = "pw"; ui.loginErr = ""; break;
+      case "lock":
+        if (ui.dirty) { ui.msg = "還有未儲存的修改，請先儲存檔案或捨棄修改。"; renderSavebar(); return; }
+        full = null; saved = null; password = null; ui.edit = false; ui.msg = ""; ui.view = "cat";
+        break;
+      case "log": ui.view = "log"; ui.q = ""; document.getElementById("q").value = ""; break;
       case "toggle": {
         var isOpen = !!ui.open[id] || (ui.q.trim() && ui.open[id] !== false);
         ui.open[id] = !isOpen; ui.confirm = null;
         renderMain(); return;
       }
+      case "pub-all": case "unpub-all":
+        c = findCat(id); c.items.forEach(function (x) { x.published = act === "pub-all"; }); markDirty(); break;
       case "add-cat":
         c = { id: uid(), name: "新章節", desc: "", group: ui.group, items: [] };
-        state.categories.push(c); ui.cat = c.id; ui.view = "cat"; markDirty(); break;
+        full.categories.push(c); ui.cat = c.id; ui.view = "cat"; markDirty(); break;
       case "cat-up": case "cat-down":
-        i = state.categories.indexOf(findCat(id));
-        if (move(state.categories, i, act === "cat-up" ? -1 : 1)) markDirty(); break;
+        i = full.categories.indexOf(findCat(id));
+        if (move(full.categories, i, act === "cat-up" ? -1 : 1)) markDirty(); break;
       case "cat-del":
-        state.categories = state.categories.filter(function (x) { return x.id !== id; });
+        full.categories = full.categories.filter(function (x) { return x.id !== id; });
         ui.cat = null; ui.confirm = null; markDirty(); break;
       case "add-item":
         c = findCat(id);
-        var it = { id: uid(), title: "", summary: "", timing: "", owner: "", steps: [], notes: [], refs: [], updated: today(), draft: false };
+        var it = { id: uid(), title: "", summary: "", timing: "", owner: "", steps: [], notes: [], refs: [], updated: today(), published: false };
         c.items.push(it); ui.open[it.id] = true; markDirty();
         render();
         var t = document.getElementById("f-" + it.id + "-title"); if (t) t.focus();
@@ -995,9 +1109,8 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       case "ask": ui.confirm = b.dataset.key; break;
       case "cancel": ui.confirm = null; break;
       case "discard":
-        state = clone(saved); ui.dirty = false; ui.note = ""; ui.msg = ""; ui.confirm = null;
-        if (!findCat(ui.cat)) ui.cat = state.categories[0] ? state.categories[0].id : null;
-        syncGroup();
+        if (!vault) { ui.msg = "第一次設定密碼後，必須先儲存檔案。"; renderSavebar(); return; }
+        full = clone(saved); ui.dirty = false; ui.note = ""; ui.msg = ""; ui.confirm = null;
         break;
       case "save": save(); return;
       default: return;
@@ -1005,76 +1118,66 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     render();
   }
 
+  // ---------- saving ----------
   var RESET = ":root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.4 system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}";
   var SC = "<" + "/script>";
+  var FILE_NAME = "法務守備位置.html";
+  function jsonBlock(id, obj) { return '<script type="application/json" id="' + id + '">\n' + JSON.stringify(obj, null, 1).replace(/</g, "\\u003c") + "\n" + SC + "\n"; }
 
-  function buildDocument(data) {
-    var json = JSON.stringify(data, null, 1).replace(/</g, "\\u003c");
+  function buildDocument(data, v) {
     var fonts = Array.prototype.map.call(document.querySelectorAll('link[href*="fonts.googleapis"],link[rel="preconnect"]'), function (l) { return l.outerHTML; }).join("\n");
     return "<!doctype html><html><head><meta charset=utf8><meta name=viewport content=\"width=device-width,initial-scale=1,viewport-fit=cover\"><style>" + RESET + "</style></head><body>" +
       "<title>法務守備位置</title>\n" + fonts + "\n" +
       document.getElementById("app-style").outerHTML + "\n" +
       '<div id="app"></div>\n' +
-      '<script type="application/json" id="manual-data">\n' + json + "\n" + SC + "\n" +
+      jsonBlock("public-data", publicOf(data)) + jsonBlock("vault", v) +
       '<script id="app-script">' + document.getElementById("app-script").textContent + SC +
       "</body></html>";
   }
 
-  function leaveBackOffice(msg) {
-    ui.editor = false; ui.edit = false; ui.msg = msg || ""; render();
+  function writeFile(text) {
+    if (window.claude && window.claude.use) {
+      return window.claude.use("downloads").then(function (dl) {
+        if (!dl) throw { code: "unavailable" };
+        return dl.save({ filename: FILE_NAME, data: text }).then(function () { return "download"; });
+      });
+    }
+    if (window.showSaveFilePicker) {
+      return window.showSaveFilePicker({ suggestedName: FILE_NAME, types: [{ description: "網頁檔", accept: { "text/html": [".html"] } }] }).then(function (h) {
+        return h.createWritable().then(function (w) { return w.write(text).then(function () { return w.close(); }); }).then(function () { return "picked"; });
+      }, function (err) { if (err && err.name === "AbortError") throw { code: "declined" }; return blobDownload(text); });
+    }
+    return Promise.resolve(blobDownload(text));
   }
-
-  function exportShareCopy() {
-    if (!downloadsApi) return;
-    var copy = clone(saved);
-    copy.meta.mode = "viewer"; copy.log = [];
-    downloadsApi.save({ filename: "法務守備位置.html", data: buildDocument(copy) }).then(function () {
-      ui.msg = ui.dirty ? "已匯出（內容為上次儲存的版本，尚未儲存的修改不包含在內）。" : "已匯出分享版，可直接把這個檔案傳給同仁。";
-      renderSavebar(); render();
-    }, function (err) {
-      var code = err && err.code;
-      if (code === "declined") return;
-      ui.msg = code === "rate_limited" ? "下載視窗已開啟，請先完成或取消。" : "這個檢視無法匯出檔案。";
-      render();
-    });
+  function blobDownload(text) {
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([text], { type: "text/html;charset=utf-8" }));
+    a.download = "legal-positions.html";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 5000);
+    return "download";
   }
 
   function save() {
-    if (!artifactApi || !ui.editor) { leaveBackOffice("這個檢視沒有編輯權限，無法儲存。"); return; }
-    var next = clone(state);
+    if (!full || !password) return;
+    var next = clone(full);
     next.meta.updated = today();
     next.log.unshift({ date: today(), text: ui.note.trim() || "更新內容" });
     ui.saving = true; ui.msg = ""; renderSavebar();
-    artifactApi.publish(buildDocument(next)).then(function () {
-      ui.saving = false; ui.dirty = false; saved = next; state = clone(next); ui.note = "";
-      ui.msg = "已儲存，頁面會自動更新為新版本。"; render();
-    }, function (err) {
+    encryptData(next, password).then(function (v) {
+      return writeFile(buildDocument(next, v)).then(function (how) {
+        vault = v; pubData = publicOf(next); full = next; saved = clone(next); ui.dirty = false; ui.note = ""; ui.saving = false;
+        ui.msg = how === "picked" ? "已儲存。若存的是 H 槽上的原檔，同仁重新開啟就會看到新內容。" : "已下載新檔案，請把它放到 H 槽，取代原本的「" + FILE_NAME + "」。";
+        render();
+      });
+    }).catch(function (err) {
       ui.saving = false;
-      var code = err && err.code;
-      if (code === "conflict") ui.msg = "有人先儲存了較新的版本，頁面將重新載入。";
-      else if (["not_writer", "not_granted", "not_declared", "consent_required", "capability_disabled", "capability_removed"].indexOf(code) >= 0) { ui.dirty = false; leaveBackOffice(); return; }
-      else if (code === "rate_limited") ui.msg = "儲存太頻繁，請稍候再試。";
-      else if (code === "too_large") ui.msg = "內容太大，無法儲存。";
-      else ui.msg = "儲存失敗，請稍後再試。";
-      render();
+      ui.msg = err && err.code === "declined" ? "已取消儲存，修改還在，可以再按一次「儲存檔案」。" : "儲存失敗，請換用 Edge 或 Chrome 再試。";
+      renderSavebar();
     });
   }
 
   window.addEventListener("beforeunload", function (e) { if (ui.dirty) { e.preventDefault(); e.returnValue = ""; } });
-
   shell(); render();
-
-  if (!VIEWER_COPY && window.claude && window.claude.use) {
-    Promise.all([window.claude.use("artifact"), window.claude.use("user")]).then(function (r) {
-      artifactApi = r[0];
-      if (!artifactApi) return;
-      var u = r[1];
-      return Promise.resolve(u && typeof u.canEdit === "function" ? u.canEdit() : null).then(function (ok) {
-        if (ok === false) return;
-        ui.editor = true; renderTop();
-        window.claude.use("downloads").then(function (dl) { downloadsApi = dl; if (ui.edit) renderMain(); });
-      });
-    });
-  }
 })();
 </script>
