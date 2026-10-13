@@ -109,6 +109,15 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
 .savebar .msg{flex-basis:100%;font-size:13px;color:var(--seal)}
 .savebar .msg:empty{display:none}
 .toast{font-size:13px;color:var(--ok)}
+.shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.shot{margin:0;display:grid;gap:6px;min-width:0}
+.shot img{width:100%;height:auto;border:1px solid var(--line);border-radius:8px;background:var(--sheet);cursor:zoom-in}
+.shot figcaption{font-size:13px;color:var(--muted)}
+.shot-empty{border:1.5px dashed var(--line);border-radius:8px;padding:18px 12px;color:var(--muted);font-size:13px;text-align:center}
+.img-edit{display:grid;gap:8px;border:1px dashed var(--line);border-radius:8px;padding:10px}
+.img-edit img{max-width:220px;border:1px solid var(--line);border-radius:6px}
+.lightbox{position:fixed;inset:0;z-index:9;background:rgba(0,0,0,.82);display:grid;place-items:center;padding:16px;cursor:zoom-out}
+.lightbox img{max-width:100%;max-height:100%;border-radius:6px}
 @media (max-width:760px){
   .shell{gap:16px;padding-block:14px 140px}
   .menu{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
@@ -125,324 +134,515 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
 <script type="application/json" id="manual-data">
 {
  "meta": {
-  "updated": "2026-10-09"
+  "updated": "2026-10-13"
  },
  "groups": [
   {
-   "id": "g-doc",
-   "code": "文",
-   "name": "收發文",
-   "desc": "外部來文的簽收、登記與分送，以及公司對外發文的檢核與寄送。",
-   "plain": "收文登記分送 / 發文檢核寄送"
+   "id": "g-court",
+   "code": "法",
+   "name": "法院信函",
+   "desc": "每日法院掛號信函的簽收、分流、建檔，myOffice 外部法院來函的處理，以及寄出法院信函。",
+   "plain": "每日收取 / 外部來函 / 寄法院信函"
+  },
+  {
+   "id": "g-review",
+   "code": "審",
+   "name": "合約審閱案件",
+   "desc": "myOffice／Outlook 收到的會辦與用印申請案件：分案、登記、設定承辦與簽核人員後送出。",
+   "plain": "會辦案件 / 一般・制式・純商業條件增補合約"
   },
   {
    "id": "g-seal",
    "code": "印",
    "name": "用印",
-   "desc": "同仁持文件來用印時，從確認申請、核對文件到登記歸檔。",
-   "plain": "同仁來用印時的受理與登記"
+   "desc": "收到 Mika 轉寄的用印通知後，檢查簽核、確認印信、用印並通知同仁取件。",
+   "plain": "檢查簽核 → 確認印信 → 用印 → 通知取件"
   },
   {
    "id": "g-con",
    "code": "約",
-   "name": "重大合約收受",
-   "desc": "同仁簽妥重大合約後繳回正本，由行政點收、登記與保管。",
-   "plain": "重大合約正本的點收、登記與保管"
+   "name": "重大合約歸檔",
+   "desc": "同仁繳回重大合約時的簽收、登記表更新、掃描與紙本歸檔。",
+   "plain": "簽收紀錄 / 登記表繳回確認 / 掃描歸檔"
+  },
+  {
+   "id": "g-month",
+   "code": "月",
+   "name": "每月例行作業",
+   "desc": "每月固定要完成的作業。",
+   "plain": "每月客戶資料傳輸（CDT）需求登錄"
+  },
+  {
+   "id": "g-misc",
+   "code": "庶",
+   "name": "庶務",
+   "desc": "文具申請、海灣倉儲作業與壽險公會收據請款。",
+   "plain": "文具申請 / 海灣倉儲 / 壽險公會收據"
   }
  ],
  "categories": [
   {
-   "id": "inbound",
-   "name": "收文",
-   "desc": "郵件、快遞、公文取得後的處理。",
-   "group": "g-doc",
+   "id": "court-daily",
+   "name": "平日信函收取",
+   "desc": "每日下午簽收法院掛號信函後的處理。",
+   "group": "g-court",
    "items": [
     {
-     "id": "in-1",
-     "title": "簽收來文",
-     "summary": "領取紙本文件時，核對收件人與件數後簽收。",
-     "timing": "送達當下處理",
+     "id": "cd-1",
+     "title": "簽收掛號信函",
+     "summary": "每日下午約 1:45 簽收法院掛號信函，並查看平信信箱。",
+     "timing": "每日下午約 1:45",
      "owner": "",
      "steps": [
-      "核對信封上的收件人（公司名稱）是否為本公司",
-      "清點件數，掛號、快遞件與送件人的清單逐件核對，簽收單上簽名",
-      "拆信後蓋部門收發章，並掃描公文",
-      "公文掃描下載後須命名"
+      "每日下午約 1:45 簽收掛號信函",
+      "核對發信法院是否與簽收單上的法院名稱一致",
+      "順便查看平信的信箱內是否有信，如有也需要領出"
      ],
-     "notes": [
-      "寫明「親啟」或指定個人的信件不拆封，直接轉交收件人",
-      "法院、主管機關的掛號文件要特別留意，簽收日可能就是期限起算日"
-     ],
+     "notes": [],
      "refs": [],
-     "updated": "2026-10-09",
-     "draft": true
+     "images": [],
+     "updated": "2026-10-13",
+     "draft": false
     },
     {
-     "id": "in-2",
-     "title": "登記與分文",
-     "summary": "蓋收文章、登錄收文登記簿，再分送承辦單位。",
-     "timing": "收文當日完成分送",
+     "id": "cd-2",
+     "title": "判斷是否蓋日期章並分流",
+     "summary": "依信函類型決定是否蓋日期章、掃描後如何處理。",
+     "timing": "",
      "owner": "",
      "steps": [
-      "拆封（親啟件除外），確認內容與附件齊全",
-      "在來文上蓋收文章，填上收文日期與收文編號",
-      "登錄收文登記簿：收文日、收文編號、來文單位、來文字號、主旨、附件、承辦單位",
-      "依主旨判斷承辦單位，不確定時先請示主管",
-      "送交承辦單位，請收件人在登記簿上簽收"
+      "屬於「撤銷案件／扣押案件／其他本部門承辦案件」→ 蓋日期章 → 掃描",
+      "屬於「消債／需轉寄台中辦公室」→ 不蓋日期章 → 掃描後轉寄台中辦公室",
+      "台中辦公室聯絡方式：收件單位：POS／收件人：偲喬／信件大綱：消債",
+      "其他不需蓋章的信件：詢問後確認並掃描"
      ],
-     "notes": [
-      "附件缺漏時在登記簿註記，並通知承辦單位",
-      "收文登記簿的格式（紙本或電子表單）請依實際情況修改"
-     ],
+     "notes": [],
      "refs": [],
-     "updated": "2026-10-09",
-     "draft": true
+     "images": [],
+     "updated": "2026-10-13",
+     "draft": false
     },
     {
-     "id": "in-3",
-     "title": "限期來文追蹤",
-     "summary": "有回覆期限的來文，提醒承辦單位在期限前處理。",
-     "timing": "期限前 3 個工作天提醒（可依實際調整）",
+     "id": "cd-3",
+     "title": "建檔與命名",
+     "summary": "掃描過的法院信函需建檔並保存，依規則命名。",
+     "timing": "",
      "owner": "",
      "steps": [
-      "登記時一併記下來文要求的回覆期限",
-      "把期限記到行事曆或追蹤表",
-      "期限前提醒承辦人，確認是否已辦理",
-      "承辦單位回覆後，在登記簿註記結案"
+      "掃描過的法院信函需建檔並保存",
+      "檔名：債務人名字_法院地年份司執 O 股案號",
+      "範例：王大明_苗栗 115 司執和 123456"
+     ],
+     "notes": [],
+     "refs": [],
+     "images": [],
+     "updated": "2026-10-13",
+     "draft": false
+    },
+    {
+     "id": "cd-4",
+     "title": "依案件類型處理",
+     "summary": "確認今日收到的法院信函屬於何種類型，以及應如何處理。",
+     "timing": "",
+     "owner": "",
+     "steps": [
+      "確認今日收到法院信函屬於何種類型及應如何處理",
+      "撤銷案件：代表此案已結束，可直接交由 Mika",
+      "扣押保單（KEY WORDS：保險契約）：要寄郵件到保服詢問保單；當日詢問案件需製成壓縮檔（檔名：當日日期；密碼：Pcalt03358805）",
+      "扣押薪資（KEY WORDS：薪資債權）：要寄郵件到人力資源部，詢問債務人是否為本公司員工",
+      "扣押股票（KEY WORDS：營利所得債權）：要寄郵件到股務（元大）"
      ],
      "notes": [
-      "法院、主管機關來文通常期限較短，收到當天就通知承辦人"
+      "用信函上的關鍵字判斷扣押類型：保險契約＝保單、薪資債權＝薪資、營利所得債權＝股票"
      ],
      "refs": [],
-     "updated": "2026-10-09",
-     "draft": true
+     "images": [],
+     "updated": "2026-10-13",
+     "draft": false
     }
    ]
   },
   {
-   "id": "outbound",
-   "name": "發文",
-   "desc": "公司對外寄送文件的檢核、寄送與回執。",
-   "group": "g-doc",
+   "id": "court-ext",
+   "name": "外部法院來函",
+   "desc": "從 myOffice 系統收到的外部法院來函。",
+   "group": "g-court",
    "items": [
     {
-     "id": "out-1",
-     "title": "發文前檢核",
-     "summary": "寄出前確認已核准、已用印、附件齊全。",
+     "id": "ce-1",
+     "title": "外部法院來函處理",
+     "summary": "於 myOffice 收到外部來函後，下載確認案件類型，再核准或駁回並存檔。",
      "timing": "",
      "owner": "",
      "steps": [
-      "確認文件已經權責主管核准（簽核單或核判紀錄）",
-      "確認發文字號、日期已填寫",
-      "需用印的文件確認已完成用印（見「用印」）",
-      "核對附件份數與文件上記載一致",
-      "核對收件人名稱、地址、郵遞區號"
+      "於 myOffice 收到外部來函，將檔案全部下載",
+      "確認皆為撤銷案件／扣押案件／其他本部門承辦案件後按核准",
+      "有「消債案件」或確認後不是前述的案件：於說明處說明非屬我們的案件並駁回",
+      "扣押案件：發信詢問保服後，把建好的資料夾（含加密的資料夾）存到 L-12-09 強執每日查詢暨回函（2022 起）",
+      "撤銷及其他類型案件：保存在自己的暫存區"
      ],
      "notes": [
-      "任一項不符時退回承辦人補正，不要先寄出"
+      "存放時請按日期分開，也就是建資料夾並按日期存放"
      ],
      "refs": [],
-     "updated": "2026-10-09",
-     "draft": true
-    },
+     "images": [],
+     "updated": "2026-10-13",
+     "draft": false
+    }
+   ]
+  },
+  {
+   "id": "court-out",
+   "name": "寄法院信函",
+   "desc": "寄出法院信函前的用印與影印。",
+   "group": "g-court",
+   "items": [
     {
-     "id": "out-2",
-     "title": "寄送與登記",
-     "summary": "選擇寄送方式、登錄發文登記簿並交寄。",
-     "timing": "郵局交寄截止時間請填入",
+     "id": "co-1",
+     "title": "寄法院信函",
+     "summary": "蓋訴訟專用章、影印留存、蓋信封單位章，下午 3 點前寄出。",
+     "timing": "下午 15:00 前寄出",
      "owner": "",
      "steps": [
-      "依承辦人需求選擇寄送方式：平信、掛號、雙掛號（附回執）、快遞或專人送達",
-      "封裝並填寫信封或掛號單",
-      "登錄發文登記簿：發文日、發文字號、收件人、主旨、寄送方式、掛號號碼",
-      "交寄後留存郵局執據或快遞單號",
-      "通知承辦人已寄出及掛號號碼"
+      "將要寄出的信蓋上訴訟專用章",
+      "蓋完後複印所有信件一份",
+      "完成信封單位章（記得只保留「法律事務」）",
+      "下午 15:00 前寄出"
+     ],
+     "notes": [],
+     "refs": [],
+     "images": [],
+     "updated": "2026-10-13",
+     "draft": false
+    }
+   ]
+  },
+  {
+   "id": "review",
+   "name": "系統案件處理",
+   "desc": "myOffice／Outlook 收到的會辦及用印申請案件。",
+   "group": "g-review",
+   "items": [
+    {
+     "id": "rv-1",
+     "title": "會辦案件（編號 A 開頭）",
+     "summary": "依窗口分案、登記〈合約審閱用印案件登記表〉並設定承辦人後送出。",
+     "timing": "",
+     "owner": "",
+     "steps": [
+      "收到會辦案件（編號為 A 開頭的）：點開開啟表單",
+      "依照「Legal 受理各部門合約諮詢審閱之窗口」將案件分給正確的承辦人",
+      "完成〈合約審閱用印案件登記表〉的登記，並依指示完成會辦案件部分",
+      "承辦人設定：依照 Legal 受理各部門合約諮詢審閱之窗口（Rex：新保險；Jasmine：客戶申訴；Teresa：客戶暨行銷；Mika：其他）",
+      "完成並確認資訊無誤後送出流程"
      ],
      "notes": [
-      "需要證明對方收到的文件（例如通知、催告）建議用雙掛號或存證信函，請先與承辦人確認"
+      "因沒有浮水印，會需要 Grace、Mika 的協助（浮水印只有 Mika 及 Grace 擁有）"
      ],
-     "refs": [
+     "refs": [],
+     "images": [],
+     "updated": "2026-10-13",
+     "draft": false
+    },
+    {
+     "id": "rv-2",
+     "title": "一般合約審閱（含重大合約）",
+     "summary": "收到用印申請後登記、檢查重大合約資訊與檢核表 C、設定承辦／簽核／知會人員並建檔。",
+     "timing": "",
+     "owner": "",
+     "steps": [
+      "收到用印申請：於 myOffice 或 Outlook 收到用印需求通知後，開始處理案件",
+      "點選郵件開啟表單連結",
+      "完成〈合約審閱用印案件登記表〉的登記",
+      "重大合約時：生效日期若合約未明確標示，請以黃色底色註記；繳回期限以生效日期後一個月為準；合約分類依〈合約審核、用印暨保管辦法〉之規範判斷",
+      "檢查檢核表 C（合約內容檢核項目）是否有填寫：因不會有公司懲罰自己的合約，此處如有填寫需聯繫申請人",
+      "若檢核表 C 已填寫，須與下載的合約條文核對內容是否相符；如有疑義，應先洽詢申請人，並視情形決定退回或要求補件",
+      "承辦人設定：依照「Legal 受理各部門合約諮詢審閱之窗口」的範本選擇（或依發起任務流程的部門分給承辦負責人）；處理說明依照〈合約審核、用印暨保管辦法〉7.1 做分類",
+      "簽核人員：移除 Jasmine，僅保留 Vallance",
+      "知會人員需有：Mika、財務系統 Jacky Kwan（關永威）、國內財務會計 Tina CH Chen（陳志欣）、國內財務會計 Maggie Chiu（邱芳瑜）、國內財務會計 Mandy CC Hung（洪秋貞）",
+      "完成並確認資訊無誤後送出流程",
+      "下載的附件需於 L-30 建檔，檔名依合約編號命名（例：BD_520…）"
+     ],
+     "notes": [
+      "這個流程由兩頁手冊合併而成（合約審閱 (一)～(六) 與第 3 頁 (六)～(十二)），請確認順序是否正確"
+     ],
+     "refs": [],
+     "images": [
       {
-       "label": "中華郵政郵件查詢",
-       "url": "https://postserv.post.gov.tw/pstmail/main_mail.html"
+       "id": "rv-2-img1",
+       "caption": "合約內容檢核項目（檢核表 C）",
+       "src": ""
       }
      ],
-     "updated": "2026-10-09",
+     "updated": "2026-10-13",
      "draft": true
     },
     {
-     "id": "out-3",
-     "title": "回執與退件",
-     "summary": "雙掛號回執收回後歸檔；退件通知承辦人。",
+     "id": "rv-3",
+     "title": "制式合約",
+     "summary": "確認檢核表勾選、公司內部制式合約是否為最新版，承辦人選 Mika。",
      "timing": "",
      "owner": "",
      "steps": [
-      "收到回執後，在發文登記簿註記收回日期",
-      "回執交承辦人或依規定歸檔",
-      "遇到退件，登記退件原因（查無此人、遷移不明等）",
-      "退件連同原信封交還承辦人，由承辦人決定是否重寄"
+      "收到用印申請：於系統收到用印需求通知後，開始處理案件",
+      "點選郵件裡開啟表單連結",
+      "下載用印檢核表",
+      "確認檢核表已勾選：合約文件（含生效日期；溯及生效者應說明其合理性）、制式合約（年版，請確認使用最新版本）",
+      "判斷制式合約種類：外面公司的制式合約（外面廠商提供）不需檢查是否為最新合約；公司內部的制式合約需協助檢查是否已更新為最新版",
+      "公司內部制式合約最新版路徑：https://twlifesharepoint.pru.intranet.asia/sites/eKM/eFileMgmt/DocLib/法律事務/L-09 制式合約",
+      "承辦人選擇 Mika，並在處理說明處打上：「本合約為制式合約，經確認為最新版本，商業條件由 user 自行確認」",
+      "於〔合約審閱&用印 20260101〕將用印資料填妥（合約送審單號及備註皆註明此份合約為制式合約）",
+      "完成檢查無誤後送出流程"
      ],
-     "notes": [
-      "退件的原信封要保留，不要拆開重裝，可作為寄送的證明"
-     ],
+     "notes": [],
      "refs": [],
-     "updated": "2026-10-09",
-     "draft": true
+     "images": [
+      {
+       "id": "rv-3-img1",
+       "caption": "檢核表勾選範例（制式合約）",
+       "src": ""
+      }
+     ],
+     "updated": "2026-10-13",
+     "draft": false
+    },
+    {
+     "id": "rv-4",
+     "title": "純商業條件增補合約",
+     "summary": "確認檢核表勾選，承辦人選 Mika 並填入固定的處理說明。",
+     "timing": "",
+     "owner": "",
+     "steps": [
+      "收到用印申請：於系統收到用印需求通知後，開始處理案件",
+      "點選郵件裡開啟表單連結",
+      "確認檢核表已勾選「純商業條件增補合約」，以及 A. 合約流程檢核表各項（勾選「是」者均應提供附件）",
+      "承辦人選擇 Mika，並在處理說明打上：「本案申請用印合約皆為純商業條件增補合約，商業條件由 USER 自行確認，重大合約 B or C or D 類 再保合約（辦法 7.1.4）」",
+      "填妥〈合約審閱用印案件登記表〉"
+     ],
+     "notes": [],
+     "refs": [],
+     "images": [
+      {
+       "id": "rv-4-img1",
+       "caption": "合約流程檢核表 A 與勾選範例",
+       "src": ""
+      }
+     ],
+     "updated": "2026-10-13",
+     "draft": false
     }
    ]
   },
   {
    "id": "seal-use",
-   "name": "同仁用印",
-   "desc": "同仁持文件來用印時的受理流程。",
+   "name": "用印流程",
+   "desc": "收到用印通知到同仁取件。",
    "group": "g-seal",
    "items": [
     {
      "id": "seal-1",
-     "title": "受理用印申請",
-     "summary": "先確認用印申請單填妥並經主管核准。",
+     "title": "用印流程",
+     "summary": "先確認簽核完整，再依用印檢核表確認文件與印信，用印後通知同仁取件。",
      "timing": "",
      "owner": "",
      "steps": [
-      "請同仁出示用印申請單（紙本或系統簽核紀錄）",
-      "確認申請單欄位填寫完整：申請人、部門、文件名稱、用印事由、印信種類、份數",
-      "確認已經權責主管核准",
-      "未核准或資料不全時，請同仁補齊後再來"
+      "收到 Mika 轉寄的 user 用印通知",
+      "先檢查檔名為〔用印簽核完成_日期〕，內容需有簽核流程、簽核單子",
+      "打開用印檢核表，在「用印文件」處查看 USER 哪些文件需用印",
+      "看「申請蓋用印信」，確認 USER 要用哪些印",
+      "用印",
+      "用印完成後聯絡 USER，讓他們來取件"
      ],
      "notes": [
-      "急件也要有核准；能否先用印後補單，依公司規定辦理（請確認後填入）"
+      "簽核流程、簽核單子缺任何一樣都不能用印！",
+      "印信種類：公司印鑑章（大）、董事長印鑑章（小）、總經理專用章（CEO）、騎縫章（長的，合約文件用印必填）、其他印信或簽名（需載明名稱）"
      ],
      "refs": [],
-     "updated": "2026-10-09",
-     "draft": true
-    },
-    {
-     "id": "seal-2",
-     "title": "核對文件",
-     "summary": "文件內容、份數要與申請單一致。",
-     "timing": "",
-     "owner": "",
-     "steps": [
-      "核對文件名稱、份數與申請單相符",
-      "合約類文件確認是法務審閱過的定稿版本",
-      "檢查文件是否完整，有無空白頁或未填的空格",
-      "確認要蓋的印信種類（公司大章、負責人小章、合約專用章等）"
+     "images": [
+      {
+       "id": "seal-1-img1",
+       "caption": "用印檢核表（用印文件、申請蓋用印信欄位）",
+       "src": ""
+      }
      ],
-     "notes": [
-      "空白文件或內容未填完的文件不用印",
-      "文件有疑義時先暫停，向主管或法務確認"
-     ],
-     "refs": [],
-     "updated": "2026-10-09",
-     "draft": true
-    },
-    {
-     "id": "seal-3",
-     "title": "用印",
-     "summary": "由保管人親自蓋印，印信不交給同仁。",
-     "timing": "",
-     "owner": "",
-     "steps": [
-      "從保管處取出申請的印信",
-      "依文件指定位置蓋印，多頁文件加蓋騎縫章",
-      "確認印文清晰、沒有歪斜或模糊",
-      "用印完畢立即將印信放回並上鎖"
-     ],
-     "notes": [
-      "印信全程由保管人操作，不交給同仁自行蓋",
-      "用印過程中印信不離開視線"
-     ],
-     "refs": [],
-     "updated": "2026-10-09",
-     "draft": true
-    },
-    {
-     "id": "seal-4",
-     "title": "登記與歸檔",
-     "summary": "逐筆登錄用印登記簿，申請單歸檔。",
-     "timing": "用印當下完成登記",
-     "owner": "",
-     "steps": [
-      "登錄用印登記簿：日期、申請人、部門、文件名稱、印信種類、份數",
-      "請申請人在登記簿上簽名確認",
-      "用印申請單依日期順序歸檔",
-      "文件交還申請人"
-     ],
-     "notes": [
-      "重大合約用印後，提醒同仁簽署完成要將正本繳回（見「重大合約收受」）"
-     ],
-     "refs": [],
-     "updated": "2026-10-09",
-     "draft": true
+     "updated": "2026-10-13",
+     "draft": false
     }
    ]
   },
   {
    "id": "major-contract",
    "name": "重大合約繳回",
-   "desc": "同仁繳回重大合約正本時的點收、登記與保管。",
+   "desc": "USER 歸還重大合約時的處理。",
    "group": "g-con",
    "items": [
     {
      "id": "con-1",
-     "title": "點收正本",
-     "summary": "當場檢查合約正本是否完整，再收下。",
-     "timing": "合約雙方簽署完成後，請同仁於期限內繳回（期限請填入）",
-     "owner": "",
-     "steps": [
-      "確認繳回的是正本，不是影本或掃描檔",
-      "檢查雙方簽名、用印是否齊全",
-      "檢查騎縫章、頁數及附件是否完整",
-      "核對簽約日期、合約期間已填寫",
-      "與用印登記簿核對，確認是本公司用印過的合約"
-     ],
-     "notes": [
-      "有缺漏時當場告知同仁補正，先不收件",
-      "重大合約的認定標準請填入（例如金額門檻、合約類型）"
-     ],
-     "refs": [],
-     "updated": "2026-10-09",
-     "draft": true
-    },
-    {
-     "id": "con-2",
-     "title": "登記建檔",
-     "summary": "編號、登錄重大合約管理表並掃描留存。",
-     "timing": "收受當日完成",
-     "owner": "",
-     "steps": [
-      "給予合約編號（編號規則請填入）",
-      "登錄重大合約管理表：編號、合約名稱、相對人、金額、合約期間、到期日、承辦部門及承辦人、繳回日",
-      "請繳回人在收受登記表簽名，作為點交紀錄",
-      "掃描正本存成電子檔，依編號命名放到指定資料夾",
-      "需要時提供影本給承辦人參考"
-     ],
-     "notes": [
-      "到期日、是否自動續約要記清楚，方便日後提醒"
-     ],
-     "refs": [],
-     "updated": "2026-10-09",
-     "draft": true
-    },
-    {
-     "id": "con-3",
-     "title": "保管與調閱",
-     "summary": "正本上鎖保管，調閱須登記借還。",
+     "title": "簽收與登記表更新",
+     "summary": "請 USER 填簽收紀錄，再到 Teams LD 頻道的登記表把繳回確認改成 V。",
      "timing": "",
      "owner": "",
      "steps": [
-      "正本依編號放入上鎖的合約檔櫃",
-      "同仁要調閱正本時，請其提出申請並經主管核准",
-      "登記借出日期、借閱人、預計歸還日",
-      "歸還時核對頁數及附件完整，登記歸還日期",
-      "逾期未還時提醒借閱人"
+      "USER 來歸還重大合約時，請他們填寫年度重大合約簽收紀錄（不需填寫案件編號）",
+      "填好後到 Teams 頻道 LD → 點選「已共用」→ 選擇〔合約審閱用印案件登記表〕",
+      "在〔合約審閱&用印 20260101-〕的「繳回確認」選擇 X，並透過合約名稱找到該合約的合約編號",
+      "將繳回確認改成 V，並補上繳回日期",
+      "繳回時如生效日期為黃底，需協助補上生效日期"
+     ],
+     "notes": [],
+     "refs": [],
+     "images": [],
+     "updated": "2026-10-13",
+     "draft": false
+    },
+    {
+     "id": "con-2",
+     "title": "掃描與紙本歸檔",
+     "summary": "掃描檔放 L-30，紙本按月份歸檔，最後在簽收紀錄簽名。",
+     "timing": "",
+     "owner": "",
+     "steps": [
+      "將歸還的合約掃描，檔名：合約編號",
+      "掃描檔放在 L-30 重大合約及用印申請資料夾：找到該年份重大合約，存在該合約的用印申請資料夾中",
+      "紙本存在櫃子中，並按月份排好",
+      "在年度重大合約簽收紀錄簽名並填上日期"
+     ],
+     "notes": [],
+     "refs": [],
+     "images": [],
+     "updated": "2026-10-13",
+     "draft": false
+    }
+   ]
+  },
+  {
+   "id": "monthly",
+   "name": "每月作業",
+   "desc": "每月固定作業。",
+   "group": "g-month",
+   "items": [
+    {
+     "id": "m-1",
+     "title": "每月客戶資料傳輸（CDT）需求登錄",
+     "summary": "於 myOffice 開啟作業，比對本月與上月資料，標示異動後送 Jasmine 簽核。",
+     "timing": "依每月通知上的期限回覆（例：7 月異動於 8/12 下班前回覆）",
+     "owner": "",
+     "steps": [
+      "於 myOffice 流程作業列表開啟作業連結",
+      "複製任務描述中的連結並開啟",
+      "選擇「法律事務」並下載，存入「每月客戶資料傳輸（CDT）需求登錄」資料夾中",
+      "將這個月的資料與上個月進行比對：如有發現更動，則以藍字顯示",
+      "若無異動，則於說明欄處說明無異動，並將當月的 Excel 表附上",
+      "簽核主管設定為 Jasmine 後送出"
+     ],
+     "notes": [],
+     "refs": [],
+     "images": [
+      {
+       "id": "m-1-img1",
+       "caption": "myProcess 任務執行畫面",
+       "src": ""
+      },
+      {
+       "id": "m-1-img2",
+       "caption": "法律事務資料夾畫面",
+       "src": ""
+      }
+     ],
+     "updated": "2026-10-13",
+     "draft": false
+    }
+   ]
+  },
+  {
+   "id": "misc",
+   "name": "庶務",
+   "desc": "文具、倉儲與收據請款。",
+   "group": "g-misc",
+   "items": [
+    {
+     "id": "x-1",
+     "title": "文具申請",
+     "summary": "於 myOffice 進入文具事務用品申請系統（需用 IE 模式），送出後向老闆說明。",
+     "timing": "每週一～週四，每週一次",
+     "owner": "",
+     "steps": [
+      "於 myOffice 選擇「保誠內部系統」並點選「文具事務用品申請系統」",
+      "進入後需將文具事務用品申請系統更改成 IE 瀏覽器模式操作",
+      "更改方式：在 Edge 網址列輸入 edge://settings/defaultBrowser → 選擇預設瀏覽器 → 在「Internet Explorer 模式頁面」選擇新增頁面，並將文具事務用品申請系統的網址加入",
+      "輸入部室名稱及申請人姓名",
+      "送出申請後，以 Teams 向老闆說明申請文具及核准申請",
+      "出納通知文具到了之後，便可前去收取"
      ],
      "notes": [
-      "一般查閱優先提供電子檔或影本，盡量不借出正本"
+      "注意！每週僅週一～週四可提出申請，且每週僅可申請一次",
+      "IE 模式頁面加入後約 30 天到期，到期後需重新加入"
      ],
      "refs": [],
-     "updated": "2026-10-09",
-     "draft": true
+     "images": [
+      {
+       "id": "x-1-img1",
+       "caption": "Edge 預設瀏覽器／IE 模式設定畫面",
+       "src": ""
+      },
+      {
+       "id": "x-1-img2",
+       "caption": "文具事務用品申請系統畫面",
+       "src": ""
+      }
+     ],
+     "updated": "2026-10-13",
+     "draft": false
+    },
+    {
+     "id": "x-2",
+     "title": "海灣倉儲作業",
+     "summary": "填妥倉儲工作單與搬遷紀錄表，經 Vallance 同意後寄給海灣約時間取資料箱。",
+     "timing": "",
+     "owner": "",
+     "steps": [
+      "整理本次作業資料",
+      "填妥海灣倉儲工作單",
+      "填妥搬遷紀錄表（內容填詳細）",
+      "寄信給 Vallance，向她說明此次海灣作業內容，並請她同意簽核並授權使用簽名檔",
+      "寄信給海灣工作人員，跟對方約好時間，請他們來取資料箱"
+     ],
+     "notes": [
+      "工作單如果有填到人名等敏感資訊，用 O 模糊敏感資訊",
+      "授權人簽章可在 H:\\法律事務部門共用\\海灣入庫作業 找到",
+      "寄給海灣的倉儲工作單記得轉為 PDF 檔",
+      "海灣國際倉儲部（Crown Van Lines）Attn: Ms. Vicky Sun；Tel 02-2762-2500#227；Fax 02-2769-0691；E-mail storage@crownvan.com; vicky@crownvan.com",
+      "工作項目（Job Nature）：Delivery Empty Ctn（空箱）、Pick-up Storage（存倉）、Retrieval Delivery（調閱）、Destruction（銷毀）、Bar code request（條碼）、Tape（膠帶）、Other Service（其他工作）"
+     ],
+     "refs": [],
+     "images": [
+      {
+       "id": "x-2-img1",
+       "caption": "海灣倉儲工作單",
+       "src": ""
+      }
+     ],
+     "updated": "2026-10-13",
+     "draft": false
+    },
+    {
+     "id": "x-3",
+     "title": "壽險公會收據請款",
+     "summary": "每月收據貼白紙掃描存檔並寄給 Amy，再持請款申請與收據到財務請款。",
+     "timing": "每月",
+     "owner": "",
+     "steps": [
+      "每月壽險公會會寄收據前來",
+      "用一張白紙，將收據貼上並掃描",
+      "掃描完成存在〔覆核暫存\\Johnathan\\壽險公會收據〕中，並 e-mail 給 Amy",
+      "Amy 會以 Teams 提出請款申請",
+      "將請款申請及收據釘起來，到財務那裡完成請款"
+     ],
+     "notes": [],
+     "refs": [],
+     "images": [],
+     "updated": "2026-10-13",
+     "draft": false
     }
    ]
   }
@@ -486,6 +686,25 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     }
     return null;
   }
+  function safeImg(u) { return /^data:image\/(png|jpeg|gif|webp);base64,/i.test(u || "") ? u : ""; }
+  function findImg(itemId, imgId) { var f = findItem(itemId); return f && (f.item.images || []).filter(function (x) { return x.id === imgId; })[0]; }
+  // Shrink phone photos / screenshots so the page stays small: max 1400px wide, JPEG.
+  function loadImage(file, done) {
+    var r = new FileReader();
+    r.onload = function () {
+      var img = new Image();
+      img.onload = function () {
+        var s = Math.min(1, 1400 / img.width), c = document.createElement("canvas");
+        c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+        var x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0, c.width, c.height);
+        done(c.toDataURL("image/jpeg", 0.82));
+      };
+      img.onerror = function () { done(null); };
+      img.src = r.result;
+    };
+    r.onerror = function () { done(null); };
+    r.readAsDataURL(file);
+  }
   function safeUrl(u) { return /^https?:\/\//i.test(u || "") ? u : ""; }
 
   var SEARCH_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>';
@@ -513,7 +732,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   function render() { renderTop(); renderMenu(); renderMain(); renderFoot(); renderSavebar(); }
 
   function renderTop() {
-    document.getElementById("upd").textContent = "行政新人操作手冊 · 最後更新 " + (state.meta.updated || "");
+    document.getElementById("upd").textContent = "法律事務部｜行政人員工作流程 · 最後更新 " + (state.meta.updated || "");
     var b = document.getElementById("edit-toggle");
     // Back office: only people the platform says can publish (owner, or Editors added via Share) see it.
     b.textContent = ui.edit ? "離開後台" : "後台管理";
@@ -544,7 +763,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     var m = document.getElementById("main"); var h = "";
     var q = ui.q.trim().toLowerCase();
     if (ui.edit) h += '<div class="banner">後台管理模式：修改後按下方「儲存並發布」，所有人看到的內容才會更新。</div>';
-    else if (ui.admin && hasDraft() && !q && ui.view === "cat") h += '<div class="banner">標示「待確認」的流程是範例草稿，請到後台改成實際做法，改完取消勾選「待確認」。（這段提示與「待確認」標籤只有管理者看得到）</div>';
+    else if (ui.admin && hasDraft() && !q && ui.view === "cat") h += '<div class="banner">標示「待確認」的流程還需要確認內容，請到後台檢查，確認後取消勾選「待確認」。（這段提示與「待確認」標籤只有管理者看得到）</div>';
     if (q) {
       var hits = [];
       state.categories.forEach(function (c) {
@@ -620,6 +839,11 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     if (it.timing) h += '<div class="timing"><strong>時程：</strong>' + hl(it.timing) + "</div>";
     if (it.steps.length) h += '<div><p class="sec-label">作業步驟</p><ol class="steps">' + it.steps.map(function (s) { return "<li><span>" + hl(s) + "</span></li>"; }).join("") + "</ol></div>";
     if (it.notes.length) h += '<div><p class="sec-label">注意事項</p><ul class="notes">' + it.notes.map(function (s) { return "<li>" + hl(s) + "</li>"; }).join("") + "</ul></div>";
+    var shots = (it.images || []).filter(function (im) { return safeImg(im.src) || ui.admin; });
+    if (shots.length) h += '<div><p class="sec-label">圖片說明</p><div class="shots">' + shots.map(function (im) {
+      return '<figure class="shot">' + (safeImg(im.src) ? '<img src="' + esc(im.src) + '" alt="' + esc(im.caption) + '" data-act="zoom" data-src="' + esc(im.src) + '">' : '<div class="shot-empty">尚未放入圖片（到後台上傳）</div>') +
+        (im.caption ? "<figcaption>" + hl(im.caption) + "</figcaption>" : "") + "</figure>";
+    }).join("") + "</div></div>";
     var refs = it.refs.filter(function (r) { return safeUrl(r.url); });
     if (refs.length) h += '<div><p class="sec-label">相關連結</p><div class="refs">' + refs.map(function (r) { return '<a href="' + esc(r.url) + '" target="_blank" rel="noopener">' + esc(r.label || r.url) + "</a>"; }).join("") + "</div></div>";
     h += '<div class="meta">' + (it.owner ? "<span>負責：" + hl(it.owner) + "</span>" : "") + "<span>最後更新 " + esc(it.updated) + "</span></div>";
@@ -640,7 +864,15 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       f("作業步驟", "steps", it.steps.join("\n"), true, "一行一個步驟，順序即步驟順序") +
       f("注意事項", "notes", it.notes.join("\n"), true, "一行一點") +
       f("相關連結", "refs", it.refs.map(function (r) { return (r.label ? r.label + " | " : "") + r.url; }).join("\n"), true, "一行一個，格式：名稱 | https://網址") +
-      '<label class="check"><input type="checkbox" id="f-' + id + '-draft" data-field="draft" data-id="' + id + '"' + (it.draft ? " checked" : "") + '> 待確認（範例草稿）</label>' +
+      '<div><p class="sec-label">圖片欄位</p><div class="form">' + (it.images || []).map(function (im) {
+        var iid = esc(im.id);
+        return '<div class="img-edit"><label>圖片說明<input type="text" id="im-' + iid + '-cap" data-imgcap="' + iid + '" data-id="' + id + '" value="' + esc(im.caption) + '"></label>' +
+          (safeImg(im.src) ? '<img src="' + esc(im.src) + '" alt="">' : '<span class="hint">尚未放入圖片</span>') +
+          '<div class="row"><label class="btn small" style="display:inline-block;color:var(--ink)">' + (safeImg(im.src) ? "更換圖片" : "上傳圖片") + '<input type="file" accept="image/*" data-imgfile="' + iid + '" data-id="' + id + '" hidden></label>' +
+          (safeImg(im.src) ? '<button type="button" class="btn small" data-act="img-clear" data-img="' + iid + '" data-id="' + id + '">移除圖片</button>' : "") +
+          '<button type="button" class="btn small danger" data-act="img-del" data-img="' + iid + '" data-id="' + id + '">刪除這個欄位</button></div></div>';
+      }).join("") + '<div class="row"><button type="button" class="btn small" data-act="img-add" data-id="' + id + '">＋ 新增圖片欄位</button></div></div></div>' +
+      '<label class="check"><input type="checkbox" id="f-' + id + '-draft" data-field="draft" data-id="' + id + '"' + (it.draft ? " checked" : "") + '> 待確認</label>' +
       '<div class="row end"><button type="button" class="btn small" data-act="up" data-id="' + id + '">上移</button><button type="button" class="btn small" data-act="down" data-id="' + id + '">下移</button>' +
       (ui.confirm === "item:" + it.id
         ? '<span class="confirm">確定刪除這個流程？</span><button type="button" class="btn small danger" data-act="del" data-id="' + id + '">確定刪除</button><button type="button" class="btn small" data-act="cancel">取消</button>'
@@ -666,6 +898,16 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   function onInput(e) {
     var t = e.target;
     if (t.id === "save-note") { ui.note = t.value; return; }
+    if (t.dataset.imgcap) { var ic = findImg(t.dataset.id, t.dataset.imgcap); if (ic) { ic.caption = t.value; markDirty(); } return; }
+    if (t.dataset.imgfile) {
+      if (e.type !== "change" || !t.files || !t.files[0]) return;
+      var im = findImg(t.dataset.id, t.dataset.imgfile); if (!im) return;
+      loadImage(t.files[0], function (src) {
+        if (!src) { ui.msg = "這個檔案無法讀取，請換一張圖片。"; renderSavebar(); return; }
+        im.src = src; findItem(t.dataset.id).item.updated = today(); markDirty(); renderMain();
+      });
+      return;
+    }
     if (t.dataset.gfield) {
       var g = findGroup(t.dataset.id); if (!g) return;
       g[t.dataset.gfield] = t.value; markDirty(); renderMenu();
@@ -725,7 +967,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
         ui.cat = null; ui.confirm = null; markDirty(); break;
       case "add-item":
         c = findCat(id);
-        var it = { id: uid(), title: "", summary: "", timing: "", owner: "", steps: [], notes: [], refs: [], updated: today(), draft: false };
+        var it = { id: uid(), title: "", summary: "", timing: "", owner: "", steps: [], notes: [], refs: [], images: [], updated: today(), draft: false };
         c.items.push(it); ui.open[it.id] = true; markDirty();
         render();
         var t = document.getElementById("f-" + it.id + "-title"); if (t) t.focus();
@@ -734,6 +976,18 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
         f = findItem(id); if (f && move(f.cat.items, f.idx, act === "up" ? -1 : 1)) markDirty(); break;
       case "del":
         f = findItem(id); if (f) { f.cat.items.splice(f.idx, 1); markDirty(); } ui.confirm = null; break;
+      case "img-add":
+        f = findItem(id); if (!f) return;
+        f.item.images = f.item.images || [];
+        f.item.images.push({ id: uid(), caption: "", src: "" }); markDirty(); break;
+      case "img-clear":
+        var ix = findImg(id, b.dataset.img); if (ix) { ix.src = ""; markDirty(); } break;
+      case "img-del":
+        f = findItem(id); if (f) { f.item.images = (f.item.images || []).filter(function (x) { return x.id !== b.dataset.img; }); markDirty(); } break;
+      case "zoom": {
+        var lb = document.createElement("div"); lb.className = "lightbox"; lb.innerHTML = '<img alt="" src="' + esc(b.dataset.src) + '">';
+        lb.addEventListener("click", function () { lb.remove(); }); document.body.appendChild(lb); return;
+      }
       case "ask": ui.confirm = b.dataset.key; break;
       case "cancel": ui.confirm = null; break;
       case "discard":
