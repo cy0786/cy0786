@@ -45,7 +45,7 @@ button{cursor:pointer}
 .hero{display:grid;gap:14px}
 .eyebrow{font-size:12px;letter-spacing:.16em;color:var(--seal);font-weight:700;margin:0}
 .lede{margin:0;font-size:17px;max-width:65ch}
-.menu{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
 .pos{all:unset;box-sizing:border-box;cursor:pointer;background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-content:start;min-width:0}
 .pos:hover{border-color:var(--accent)}
 .pos:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -61,6 +61,8 @@ button{cursor:pointer}
 .tab:focus-visible{outline:2px solid var(--accent)}
 .tab[aria-current="true"]{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
 .tab .n{font-size:12px;margin-left:4px;font-variant-numeric:tabular-nums}
+.adminbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:var(--seal-soft);color:var(--seal);border-radius:var(--r);padding:10px 14px;font-size:14px}
+.adminbar strong{margin-right:auto}
 .foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:12px}
 .linkbtn{all:unset;cursor:pointer;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 .linkbtn:focus-visible{outline:2px solid var(--accent)}
@@ -116,6 +118,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
 @media (max-width:760px){
   .shell{gap:16px;padding-block:14px 140px}
   .menu{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .pos:last-child:nth-child(odd){grid-column:1/-1}
   .pos{grid-template-columns:minmax(0,1fr);padding:12px}
   .pos .code{grid-row:auto;width:36px;height:36px;font-size:13px}
   .pos .pname{font-size:16px}
@@ -160,6 +163,13 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
    "name": "主審查核",
    "desc": "定期查核印信，以及重大、非重大合約的執行情形。",
    "plain": "印信與各類合約（重大／非重大）定期查核"
+  },
+  {
+   "id": "g-of",
+   "code": "OF",
+   "name": "外野聯防",
+   "desc": "對外與政府機關、主管機關、公會及民意機關的溝通與協調。",
+   "plain": "政府公共事務（主管機關、公會、民意機關）"
   }
  ],
  "categories": [
@@ -571,6 +581,105 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     }
    ],
    "group": "g-ump"
+  },
+  {
+   "id": "gov",
+   "name": "政府公共事務",
+   "desc": "與政府機關、主管機關、公會及民意機關的溝通窗口與回覆作業。",
+   "group": "g-of",
+   "items": [
+    {
+     "id": "gov-1",
+     "title": "法規草案預告與意見回覆",
+     "summary": "追蹤主管機關的法規預告，評估影響並提出意見。",
+     "timing": "依各預告公告所載的意見提出期間",
+     "owner": "",
+     "steps": [
+      "追蹤金管會、保險局及相關部會的法規草案預告",
+      "評估對公司的影響，通知相關業務單位",
+      "彙整各單位意見，陳核後於期限內提出（或透過公會彙整提出）",
+      "法規正式發布後，追蹤內部規章及作業流程調整"
+     ],
+     "notes": [
+      "意見提出管道（直接提出或經公會彙整）請依公司實務修改"
+     ],
+     "refs": [],
+     "updated": "2026-10-13",
+     "draft": true
+    },
+    {
+     "id": "gov-2",
+     "title": "主管機關函詢與回覆",
+     "summary": "收到政府機關來函時的分案、會辦與回覆。",
+     "timing": "依來函所定期限回覆",
+     "owner": "",
+     "steps": [
+      "收文登記，確認回覆期限",
+      "分案至權責單位，必要時會辦相關單位",
+      "彙整回覆內容並審閱用語",
+      "陳核後於期限內發文回覆",
+      "來文、回文歸檔並登錄追蹤表"
+     ],
+     "notes": [],
+     "refs": [],
+     "updated": "2026-10-13",
+     "draft": true
+    },
+    {
+     "id": "gov-3",
+     "title": "公會會議與議題參與",
+     "summary": "出席同業公會會議，追蹤與公司相關的議題。",
+     "timing": "",
+     "owner": "",
+     "steps": [
+      "收到公會會議通知後，確認議題及出席人員",
+      "會前蒐集公司立場與相關資料",
+      "出席會議並作成紀錄",
+      "會後回報主管，並通知相關單位後續事項",
+      "追蹤議題進度"
+     ],
+     "notes": [],
+     "refs": [],
+     "updated": "2026-10-13",
+     "draft": true
+    },
+    {
+     "id": "gov-4",
+     "title": "民意機關及民意代表詢問",
+     "summary": "立法院、議會或民意代表詢問、陳情的統一回覆。",
+     "timing": "依詢問來源所定期限回覆",
+     "owner": "",
+     "steps": [
+      "由單一窗口收件並登記",
+      "會辦相關單位提供說明資料",
+      "彙整回覆內容，確認口徑一致",
+      "陳核後回覆，並留存紀錄"
+     ],
+     "notes": [
+      "對外說明前，口徑需經權責主管核定"
+     ],
+     "refs": [],
+     "updated": "2026-10-13",
+     "draft": true
+    },
+    {
+     "id": "gov-5",
+     "title": "政府機關拜會與溝通",
+     "summary": "拜會或接待政府機關的事前準備與事後紀錄。",
+     "timing": "",
+     "owner": "",
+     "steps": [
+      "確認拜會目的、對象及出席人員",
+      "準備說明資料並陳核",
+      "拜會或會議後作成紀錄",
+      "追蹤會議中承諾或交辦的事項"
+     ],
+     "notes": [],
+     "refs": [],
+     "updated": "2026-10-13",
+     "draft": true
+    }
+   ]
   }
  ],
  "log": [
@@ -595,11 +704,11 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   var DATA_EL = document.getElementById("manual-data");
   var saved = JSON.parse(DATA_EL.textContent);
   var state = clone(saved);
-  var ui = { view: "cat", cat: null, open: {}, q: "", edit: false, dirty: false, confirm: null, readOnly: false, saving: false, msg: "", note: "" };
-  var artifactApi = null;
-  // Opened as a plain .html file (shared drive, intranet, email) rather than inside Claude.
-  var STANDALONE = !(window.claude && window.claude.use);
-  function canEditHere() { return !STANDALONE || location.hash === "#edit"; }
+  var ui = { view: "cat", cat: null, open: {}, q: "", edit: false, editor: false, dirty: false, confirm: null, saving: false, msg: "", note: "" };
+  var artifactApi = null, downloadsApi = null;
+  // The 後台 (edit mode) exists only in the Claude-hosted copy, and only for people
+  // with edit permission there. Exported share copies carry meta.mode = "viewer".
+  var VIEWER_COPY = saved.meta && saved.meta.mode === "viewer";
 
   if (!state.groups) state.groups = [];
   try { var c = localStorage.getItem("wm-cat"); if (c) ui.cat = c; } catch (e) {}
@@ -643,8 +752,9 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       '<div class="savebar" id="savebar" hidden></div>';
     document.getElementById("q").addEventListener("input", function (e) { ui.q = e.target.value; renderMenu(); renderMain(); });
     document.getElementById("edit-toggle").addEventListener("click", function () {
+      if (!ui.editor) return;
       if (ui.edit && ui.dirty) { ui.msg = "還有未儲存的修改，請先儲存或捨棄。"; renderSavebar(); return; }
-      ui.edit = !ui.edit; ui.confirm = null; render();
+      ui.edit = !ui.edit; ui.confirm = null; if (!ui.edit && ui.view === "log") ui.view = "cat"; render();
     });
     document.getElementById("app").addEventListener("click", onClick);
     document.getElementById("app").addEventListener("input", onInput);
@@ -656,9 +766,9 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   function renderTop() {
     document.getElementById("upd").textContent = "認識法務部門的工作 · 最後更新 " + (state.meta.updated || "");
     var b = document.getElementById("edit-toggle");
-    b.textContent = ui.edit ? "結束編輯" : "編輯模式";
+    b.textContent = ui.edit ? "離開後台" : "進入後台";
     b.className = "btn" + (ui.edit ? " on" : "");
-    b.hidden = (ui.readOnly || !canEditHere()) && !ui.edit;
+    b.hidden = !ui.editor;
   }
 
   function renderMenu() {
@@ -674,8 +784,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   }
 
   function renderFoot() {
-    document.getElementById("foot").innerHTML = '<span>內容由法務部門維護，流程有異動時隨時更新。</span>' +
-      '<button type="button" class="linkbtn" data-act="log">變更紀錄（' + state.log.length + '）</button>';
+    document.getElementById("foot").innerHTML = '<span>內容由法務部門維護，流程有異動時隨時更新。</span>';
   }
 
   function hasDraft() { return state.categories.some(function (c) { return c.items.some(function (i) { return i.draft; }); }); }
@@ -683,7 +792,12 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   function renderMain() {
     var m = document.getElementById("main"); var h = "";
     var q = ui.q.trim().toLowerCase();
-    if (hasDraft() && !q && ui.view === "cat") h += '<div class="banner">標示「待確認」的流程是依法規整理的範例草稿，請進入編輯模式改成公司實際做法，改完取消勾選「待確認」。</div>';
+    if (ui.edit) h += '<div class="adminbar"><strong>後台編輯中 · 只有具編輯權限的人看得到</strong>' +
+      '<button type="button" class="btn small" data-act="log">變更紀錄（' + state.log.length + '）</button>' +
+      (downloadsApi ? '<button type="button" class="btn small" data-act="export">匯出分享版 HTML</button>' : "") + "</div>";
+    if (hasDraft() && !q && ui.view === "cat") h += '<div class="banner">' + (ui.edit
+      ? "標示「待確認」的流程是依法規整理的範例草稿，請改成公司實際做法，改完取消勾選「待確認」。"
+      : "標示「待確認」的內容仍在整理中，實際做法以法務部門說明為準。") + "</div>";
     if (q) {
       var hits = [];
       state.categories.forEach(function (c) {
@@ -798,7 +912,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     bar.innerHTML = '<div class="in">' +
       (ui.dirty ? '<strong>有未儲存的修改</strong><input id="save-note" type="text" placeholder="修改說明（例如：更新股東會通知期限）" value="' + esc(ui.note) + '">' +
         '<button type="button" class="btn" data-act="discard"' + (ui.saving ? " disabled" : "") + '>捨棄</button>' +
-        '<button type="button" class="btn primary" data-act="save"' + (ui.saving || ui.readOnly ? " disabled" : "") + ">" + (ui.saving ? "儲存中…" : STANDALONE ? "下載更新後的檔案" : "儲存並發布") + "</button>" : "") +
+        '<button type="button" class="btn primary" data-act="save"' + (ui.saving ? " disabled" : "") + ">" + (ui.saving ? "儲存中…" : "儲存並發布") + "</button>" : "") +
       '<span class="msg">' + esc(ui.msg) + "</span></div>";
     if (hadFocus) { var n = document.getElementById("save-note"); n.focus(); n.setSelectionRange(n.value.length, n.value.length); }
   }
@@ -851,7 +965,8 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
         ui.view = "cat"; ui.cat = id; syncGroup(); ui.q = ""; document.getElementById("q").value = "";
         try { localStorage.setItem("wm-cat", id); } catch (er) {}
         break;
-      case "log": ui.view = "log"; ui.q = ""; document.getElementById("q").value = ""; break;
+      case "export": exportShareCopy(); return;
+      case "log": if (!ui.edit) return; ui.view = "log"; ui.q = ""; document.getElementById("q").value = ""; break;
       case "toggle": {
         var isOpen = !!ui.open[id] || (ui.q.trim() && ui.open[id] !== false);
         ui.open[id] = !isOpen; ui.confirm = null;
@@ -905,33 +1020,27 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       "</body></html>";
   }
 
-  function downloadDocument(next) {
-    try {
-      var blob = new Blob([buildDocument(next)], { type: "text/html;charset=utf-8" });
-      var a = document.createElement("a");
-      a.href = URL.createObjectURL(blob); a.download = "legal-positions.html";
-      document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(function () { URL.revokeObjectURL(a.href); }, 5000);
-    } catch (er) { ui.msg = "下載失敗，請換個瀏覽器再試。"; renderSavebar(); return; }
-    ui.dirty = false; saved = next; state = clone(next); ui.note = "";
-    ui.msg = "已下載新版檔案（legal-positions.html），請改名後取代原本分享出去的檔案。"; render();
+  function leaveBackOffice(msg) {
+    ui.editor = false; ui.edit = false; ui.msg = msg || ""; render();
+  }
+
+  function exportShareCopy() {
+    if (!downloadsApi) return;
+    var copy = clone(saved);
+    copy.meta.mode = "viewer"; copy.log = [];
+    downloadsApi.save({ filename: "法務守備位置.html", data: buildDocument(copy) }).then(function () {
+      ui.msg = ui.dirty ? "已匯出（內容為上次儲存的版本，尚未儲存的修改不包含在內）。" : "已匯出分享版，可直接把這個檔案傳給同仁。";
+      renderSavebar(); render();
+    }, function (err) {
+      var code = err && err.code;
+      if (code === "declined") return;
+      ui.msg = code === "rate_limited" ? "下載視窗已開啟，請先完成或取消。" : "這個檢視無法匯出檔案。";
+      render();
+    });
   }
 
   function save() {
-    if (STANDALONE) {
-      var nx = clone(state);
-      nx.meta.updated = today();
-      nx.log.unshift({ date: today(), text: ui.note.trim() || "更新內容" });
-      downloadDocument(nx); return;
-    }
-    if (!artifactApi) {
-      if (window.claude && window.claude.use && !ui.retried) {
-        ui.retried = true;
-        window.claude.use("artifact").then(function (a) { artifactApi = a; save(); });
-        return;
-      }
-      ui.msg = "這個檢視無法儲存（可能是唯讀連結或本機預覽）。"; ui.readOnly = true; renderSavebar(); return;
-    }
+    if (!artifactApi || !ui.editor) { leaveBackOffice("這個檢視沒有編輯權限，無法儲存。"); return; }
     var next = clone(state);
     next.meta.updated = today();
     next.log.unshift({ date: today(), text: ui.note.trim() || "更新內容" });
@@ -943,7 +1052,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       ui.saving = false;
       var code = err && err.code;
       if (code === "conflict") ui.msg = "有人先儲存了較新的版本，頁面將重新載入。";
-      else if (["not_writer", "not_granted", "not_declared", "consent_required", "capability_disabled", "capability_removed"].indexOf(code) >= 0) { ui.readOnly = true; ui.msg = "你只有檢視權限，無法儲存修改。"; }
+      else if (["not_writer", "not_granted", "not_declared", "consent_required", "capability_disabled", "capability_removed"].indexOf(code) >= 0) { ui.dirty = false; leaveBackOffice(); return; }
       else if (code === "rate_limited") ui.msg = "儲存太頻繁，請稍候再試。";
       else if (code === "too_large") ui.msg = "內容太大，無法儲存。";
       else ui.msg = "儲存失敗，請稍後再試。";
@@ -953,15 +1062,18 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
 
   window.addEventListener("beforeunload", function (e) { if (ui.dirty) { e.preventDefault(); e.returnValue = ""; } });
 
-  window.addEventListener("hashchange", renderTop);
   shell(); render();
 
-  if (window.claude && window.claude.use) {
-    window.claude.use("artifact").then(function (a) { artifactApi = a; if (!a) { ui.readOnly = true; renderTop(); } });
-    window.claude.use("user").then(function (u) {
-      if (u && typeof u.canEdit === "function") {
-        Promise.resolve(u.canEdit()).then(function (ok) { if (ok === false) { ui.readOnly = true; renderTop(); } });
-      }
+  if (!VIEWER_COPY && window.claude && window.claude.use) {
+    Promise.all([window.claude.use("artifact"), window.claude.use("user")]).then(function (r) {
+      artifactApi = r[0];
+      if (!artifactApi) return;
+      var u = r[1];
+      return Promise.resolve(u && typeof u.canEdit === "function" ? u.canEdit() : null).then(function (ok) {
+        if (ok === false) return;
+        ui.editor = true; renderTop();
+        window.claude.use("downloads").then(function (dl) { downloadsApi = dl; if (ui.edit) renderMain(); });
+      });
     });
   }
 })();
