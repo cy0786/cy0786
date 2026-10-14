@@ -81,6 +81,18 @@ main{min-width:0;display:flex;flex-direction:column;gap:14px}
 .chip{font-size:12px;padding:1px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
 .chip.draft{background:var(--warn-bg);color:var(--warn-fg)}
 .chip.private{background:var(--seal-soft);color:var(--seal)}
+.vis-panel{background:var(--sheet);border:1px solid var(--accent);border-radius:var(--r);padding:12px 16px;display:grid;gap:10px}
+.vis-head{all:unset;cursor:pointer;display:flex;justify-content:space-between;gap:12px;font-weight:700;font-size:16px}
+.vis-head:focus-visible{outline:2px solid var(--accent)}
+.vis-head .hint{font-weight:400;font-size:13px;color:var(--muted)}
+.vis-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.vis-group{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:4px;align-content:start}
+.vis-group.off{background:var(--seal-soft);border-color:var(--seal)}
+.vis-group label{display:flex;gap:8px;align-items:flex-start;font-size:14px;cursor:pointer}
+.vis-group label input{margin-top:5px;flex:none}
+.vis-group .gname{font-weight:700;font-size:15px}
+.vis-group .items{display:grid;gap:2px;padding-left:22px}
+.vis-group .off-note{font-size:12px;color:var(--seal);padding-left:22px}
 .chip.where{background:transparent;border:1px solid var(--line);color:var(--muted)}
 .item-body{padding:0 16px 16px;display:grid;gap:14px;min-width:0}
 .sec-label{font-size:12px;letter-spacing:.12em;color:var(--muted);margin:0 0 4px}
@@ -661,7 +673,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   var DATA_EL = document.getElementById("manual-data");
   var saved = JSON.parse(DATA_EL.textContent);
   var state = clone(saved);
-  var ui = { admin: false, view: "cat", cat: null, open: {}, q: "", edit: false, dirty: false, confirm: null, readOnly: false, saving: false, msg: "", note: "" };
+  var ui = { visOpen: true, admin: false, view: "cat", cat: null, open: {}, q: "", edit: false, dirty: false, confirm: null, readOnly: false, saving: false, msg: "", note: "" };
   var artifactApi = null;
   // Opened as a plain .html file (shared drive, intranet, email) rather than inside Claude.
   var STANDALONE = !(window.claude && window.claude.use);
@@ -780,6 +792,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       ? '<div class="banner">後台管理模式：修改後按下方「儲存」，重新整理或重新開啟都會保留。 <button type="button" class="linkbtn" data-act="pw-change">變更後台密碼</button>　<button type="button" class="linkbtn" data-act="export">匯出檔案（給同仁）</button></div>'
       : '<div class="banner">後台管理模式：修改後按下方「儲存並發布」，所有人看到的內容才會更新。</div>';
     else if (ui.admin && hasDraft() && !q && ui.view === "cat") h += '<div class="banner">標示「待確認」的流程還需要確認內容，請到後台檢查，確認後取消勾選「待確認」。（這段提示與「待確認」標籤只有管理者看得到）</div>';
+    if (ui.edit && !q) h += visPanel();
     if (q) {
       var hits = [];
       state.categories.forEach(function (c) {
@@ -837,6 +850,24 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       }
     }
     m.innerHTML = h;
+  }
+
+  // One place to decide what colleagues can see: tick = public, untick = only admins see it.
+  function visPanel() {
+    var h = '<section class="vis-panel"><button type="button" class="vis-head" data-act="vis-toggle" aria-expanded="' + ui.visOpen + '">' +
+      '<span>公開設定 ' + (ui.visOpen ? "▴" : "▾") + '</span><span class="hint">打勾＝同仁看得到；取消打勾＝不公開，只有管理者看得到</span></button>';
+    if (ui.visOpen) {
+      h += '<div class="vis-grid">' + state.groups.map(function (g) {
+        var items = [];
+        catsIn(g.id).forEach(function (c) { c.items.forEach(function (it) { items.push(it); }); });
+        return '<div class="vis-group' + (g.hidden ? " off" : "") + '"><label><input type="checkbox" data-vis="g" data-id="' + esc(g.id) + '"' + (g.hidden ? "" : " checked") + '><span class="gname">【' + esc(g.name) + '】</span></label>' +
+          (g.hidden ? '<span class="off-note">整項不公開：底下所有流程同仁都看不到</span>' : "") +
+          '<div class="items">' + items.map(function (it) {
+            return '<label><input type="checkbox" data-vis="i" data-id="' + esc(it.id) + '"' + (it.hidden ? "" : " checked") + '><span>' + esc(it.title || "（未命名流程）") + "</span></label>";
+          }).join("") + "</div></div>";
+      }).join("") + "</div>";
+    }
+    return h + "</section>";
   }
 
   function itemHtml(it, c, showCat) {
@@ -919,6 +950,13 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
   function onInput(e) {
     var t = e.target;
     if (t.id === "save-note") { ui.note = t.value; return; }
+    if (t.dataset.vis) {
+      if (e.type !== "change") return;
+      var vx = t.dataset.vis === "g" ? findGroup(t.dataset.id) : (findItem(t.dataset.id) || {}).item;
+      if (!vx) return;
+      vx.hidden = !t.checked; if (t.dataset.vis === "i") vx.updated = today();
+      markDirty(); renderMenu(); renderMain(); return;
+    }
     if (t.dataset.imgcap) { var ic = findImg(t.dataset.id, t.dataset.imgcap); if (ic) { ic.caption = t.value; markDirty(); } return; }
     if (t.dataset.imgfile) {
       if (e.type !== "change" || !t.files || !t.files[0]) return;
@@ -1012,6 +1050,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
         lb.addEventListener("click", function () { lb.remove(); }); document.body.appendChild(lb); return;
       }
       case "pw-change": openPwBox("change"); return;
+      case "vis-toggle": ui.visOpen = !ui.visOpen; renderMain(); return;
       case "export": exportFile(); return;
       case "ask": ui.confirm = b.dataset.key; break;
       case "cancel": ui.confirm = null; break;
