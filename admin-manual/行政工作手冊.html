@@ -907,7 +907,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
     if (bar.hidden) return;
     var hadFocus = document.activeElement && document.activeElement.id === "save-note";
     bar.innerHTML = '<div class="in">' +
-      (ui.dirty ? '<strong>有未儲存的修改</strong>' + (STANDALONE && !fileHandle ? '<span class="hint" style="font-size:13px;color:var(--muted)">第一次儲存會跳出存檔視窗，請選 H 槽上這個檔案本身並選「取代」。</span>' : "") +
+      (ui.dirty ? '<strong>有未儲存的修改</strong>' + (STANDALONE ? '<span class="hint" style="font-size:13px;color:var(--muted)">' + (fileHandle ? "儲存位置：" + esc(fileHandle.name) + ' <button type="button" class="linkbtn" data-act="pick-file">更改</button>' : "第一次儲存會跳出存檔視窗：請切換到 H 槽、點選「" + esc(fileName()) + "」這個檔案本身，再按「存檔」→「是（取代）」。") + "</span>" : "") +
         '<button type="button" class="btn" data-act="discard"' + (ui.saving ? " disabled" : "") + '>捨棄</button>' +
         '<button type="button" class="btn primary" data-act="save"' + (ui.saving || ui.readOnly ? " disabled" : "") + ">" + (ui.saving ? "儲存中…" : STANDALONE ? "儲存" : "儲存並發布") + "</button>" : "") +
       '<span class="msg">' + esc(ui.msg) + "</span></div>";
@@ -1012,6 +1012,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
         lb.addEventListener("click", function () { lb.remove(); }); document.body.appendChild(lb); return;
       }
       case "pw-change": openPwBox("change"); return;
+      case "pick-file": fileHandle = null; idb(function (s) { return s.delete(location.pathname); }); renderSavebar(); return;
       case "ask": ui.confirm = b.dataset.key; break;
       case "cancel": ui.confirm = null; break;
       case "discard":
@@ -1040,7 +1041,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       "</body></html>";
   }
 
-  function downloadDocument(next) {
+  function downloadDocument(next, note) {
     try {
       var blob = new Blob([buildDocument(next)], { type: "text/html;charset=utf-8" });
       var a = document.createElement("a");
@@ -1049,7 +1050,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       setTimeout(function () { URL.revokeObjectURL(a.href); }, 5000);
     } catch (er) { ui.msg = "下載失敗，請換個瀏覽器再試。"; renderSavebar(); return; }
     ui.dirty = false; saved = next; state = clone(next); ui.note = "";
-    ui.msg = "已下載新版檔案（admin-manual.html），請改名後取代原本分享出去的檔案。"; render();
+    ui.msg = note || "已下載新版檔案，請用它取代原本分享出去的檔案。"; render();
   }
 
   // ---- Shared-file back office: password + save straight back into this .html file ----
@@ -1103,8 +1104,11 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       } catch (e) { res(null); }
     });
   }
+  function fileName() { return decodeURIComponent(location.pathname.split("/").pop() || "") || "行政工作手冊.html"; }
   function saveToFile(next) {
-    if (!window.showSaveFilePicker) { downloadDocument(next); return; }
+    var embedded = false; try { embedded = window.top !== window; } catch (e) { embedded = true; }
+    if (embedded) { ui.msg = "這個畫面是預覽，不能存檔。請到 H 槽用 Edge 直接打開「" + fileName() + "」再儲存。"; renderSavebar(); return; }
+    if (!window.showSaveFilePicker) { downloadDocument(next, "這個瀏覽器不支援直接存回檔案，已改為下載新檔 admin-manual.html。請用 Edge 打開 H 槽上的檔案，或把下載的檔案改名後覆蓋到 H 槽。"); return; }
     var key = location.pathname;
     ui.saving = true; ui.msg = ""; renderSavebar();
     var got = fileHandle ? Promise.resolve(fileHandle) : idb(function (s) { return s.get(key); });
@@ -1116,17 +1120,23 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
       return null;
     }).then(function (hd) {
       if (hd) return hd;
-      var name = decodeURIComponent(location.pathname.split("/").pop() || "") || "行政工作手冊.html";
-      return window.showSaveFilePicker({ suggestedName: name, types: [{ description: "網頁檔", accept: { "text/html": [".html"] } }] });
+      return window.showSaveFilePicker({ id: "admin-manual", suggestedName: fileName(), types: [{ description: "網頁檔", accept: { "text/html": [".html"] } }] });
     }).then(function (hd) {
       fileHandle = hd; idb(function (s) { return s.put(hd, key); });
       return hd.createWritable().then(function (w) { return w.write(buildDocument(next)).then(function () { return w.close(); }); });
     }).then(function () {
       ui.saving = false; ui.dirty = false; saved = next; state = clone(next);
-      ui.msg = "已儲存到檔案。同仁重新整理網頁就會看到新內容。"; render();
+      ui.msg = "已儲存到「" + fileHandle.name + "」。請確認這是 H 槽上的檔案（不是「下載」資料夾）；同仁重新整理網頁就會看到新內容。"; render();
     }, function (er) {
       ui.saving = false;
-      ui.msg = er && er.name === "AbortError" ? "已取消儲存，內容還沒存檔。" : er && er.name === "NotAllowedError" ? "沒有寫入權限：請確認你對 H 槽這個資料夾有修改權限。" : "儲存失敗，請稍後再試。";
+      var n = (er && er.name) || "Error";
+      if (n === "AbortError") { ui.msg = "已取消儲存，內容還沒存檔。"; renderSavebar(); return; }
+      if (n === "SecurityError" || (n === "NotAllowedError" && !fileHandle)) {
+        // Picker blocked (company browser policy or preview window): fall back to a download.
+        downloadDocument(next, "瀏覽器不允許直接存回檔案（" + n + "），已改為下載新檔 admin-manual.html。請到「下載」資料夾把它改名為「" + fileName() + "」，再複製到 H 槽覆蓋舊檔。");
+        return;
+      }
+      ui.msg = n === "NotAllowedError" ? "沒有寫入權限：請確認你對 H 槽這個資料夾有修改權限。" : "儲存失敗（" + n + "：" + ((er && er.message) || "") + "）。請把這段訊息截圖給 Claude。";
       renderSavebar();
     });
   }
@@ -1165,6 +1175,7 @@ mark{background:var(--warn-bg);color:inherit;border-radius:3px;padding:0 1px}
 
   window.addEventListener("beforeunload", function (e) { if (ui.dirty) { e.preventDefault(); e.returnValue = ""; } });
 
+  if (STANDALONE) idb(function (s) { return s.get(location.pathname); }).then(function (hd) { if (hd && !fileHandle) { fileHandle = hd; renderSavebar(); } });
   window.addEventListener("hashchange", renderTop);
   shell(); render();
 
